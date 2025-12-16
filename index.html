@@ -1,15 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>D3 GitHub Pages Test</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindScope - Analyse des facteurs de dépression étudiante</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
+    <header>
+        <h1>MindScope</h1>
+        <nav>
+            <a href="index.html">Accueil</a>
+            <a href="pages/exploration.html">Exploration</a>
+            <a href="pages/profiling.html">Profiling</a>
+            <a href="pages/multidim.html">Analyse Multidimensionnelle</a>
+            <a href="pages/interactions.html">Interactions</a>
+            <a href="pages/outliers.html">Outliers</a>
+            <a href="pages/comparaison.html">Comparaison</a>
+        </nav>
+    </header>
 
-<h1>D3 + CSV + GitHub Pages</h1>
-<svg width="500" height="300"></svg>
+    <main>
+        <section id="intro">
+            <h2>Contexte et Objectifs</h2>
+            <p>Ce projet vise à analyser les facteurs influençant la dépression chez les étudiants à partir du Student Depression Dataset...</p>
+        </section>
 
-<script src="./js/main.js"></script>
+        <section id="quicklinks">
+            <h2>Accès rapide aux analyses</h2>
+            <div class="viz-links">
+                <a href="pages/exploration.html">Explorer les facteurs</a>
+                <a href="pages/profiling.html">Profiling des étudiants</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 MindScope - Projet étudiant</p>
+    </footer>
+
+    <script src="./js/main.js"></script>
 </body>
 </html>
