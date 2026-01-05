@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumina | Analytics Santé Mentale - Profils</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profiling.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CDN externes -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.0.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/umap-js@1.3.0/dist/umap-js.min.js"></script>
+
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar (identique) -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">L</div>
+                <h2>LUMINA</h2>
+            </div>
+            <nav class="menu">
+                <a href="index.html" class="menu-item"><span>📊</span> Vue d'ensemble</a>
+                <a href="profils.html" class="menu-item active"><span>👥</span> Profils</a>
+                <a href="comparaison.html" class="menu-item"><span>⚖️</span> Comparaisons</a>
+            </nav>
+            <div class="filters-section">
+                <h3>FILTRES</h3>
+                <div class="filter-group">
+                    <label>Genre</label>
+                    <select id="genderFilter">
+                        <option value="all">Tous</option>
+                        <option value="Male">Homme</option>
+                        <option value="Female">Femme</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Niveau d'Étude</label>
+                    <select id="degreeFilter">
+                        <option value="all">Tous</option>
+                        <option value="Bachelor">Bachelor</option>
+                        <option value="Master">Master</option>
+                        <option value="PhD">Doctorat</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Statut Dépression</label>
+                    <select id="depressionFilter">
+                        <option value="all">Tous</option>
+                        <option value="depressed">Déprimé</option>
+                        <option value="not_depressed">Non déprimé</option>
+                    </select>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <h1>🔍 Explorateur de Profils Évolué</h1>
+                <div class="user-info">Analyse multi-dimensionnelle des clusters étudiants</div>
+            </header>
+
+            <!-- SECTION 1: KPIs en Temps Réel -->
+            <div class="kpi-row" id="profile-kpis">
+                <div class="kpi-card">
+                    <div class="kpi-label">Nombre d'Étudiants</div>
+                    <div class="kpi-value" id="total-students">0</div>
+                    <div class="kpi-subtext">Total analysé</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Taux Dépression</div>
+                    <div class="kpi-value" id="depression-rate">0%</div>
+                    <div class="kpi-subtext">Moyenne globale</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Clusters Identifiés</div>
+                    <div class="kpi-value" id="cluster-count">0</div>
+                    <div class="kpi-subtext">Groupes naturels</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Facteur Risque Principal</div>
+                    <div class="kpi-value" id="main-risk">-</div>
+                    <div class="kpi-subtext">Dans la sélection</div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: Cartographie des Clusters -->
+            <div class="chart-card large">
+                <div class="card-header">
+                    <h3>🌍 Cartographie des Clusters d'Étudiants</h3>
+                    <div class="chart-controls">
+                        <select id="projection-type">
+                            <option value="pca">PCA (Linéaire)</option>
+                            <option value="tsne">t-SNE (Non-linéaire)</option>
+                            <option value="umap">UMAP (Moderne)</option>
+                        </select>
+                        <select id="color-scheme">
+                            <option value="cluster">Par Cluster</option>
+                            <option value="depression">Par Dépression</option>
+                            <option value="suicidal">Par Pensées Suicidaires</option>
+                            <option value="academic">Par Pression Académique</option>
+                        </select>
+                        <button id="toggle-3d" class="control-btn">🎲 Vue 3D</button>
+                        <button id="reset-zoom" class="control-btn">🗺️ Réinitialiser Zoom</button>
+                    </div>
+                </div>
+                <div id="cluster-map" class="chart-container interactive"></div>
+                <div class="chart-footer">
+                    <div class="cluster-legend" id="cluster-legend"></div>
+                    <div class="export-buttons">
+                        <button id="exportMapSVG" class="export-btn">📥 Exporter SVG</button>
+                        <button id="exportMapPNG" class="export-btn">📥 Exporter PNG</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: Radar Chart Comparatif -->
+            <div class="profiles-grid">
+                <div class="chart-card">
+                    <div class="card-header">
+                        <h3>📊 Profil Radar Comparatif</h3>
+                        <div class="chart-controls">
+                            <select id="comparison-mode">
+                                <option value="cluster-vs-global">Cluster vs Global</option>
+                                <option value="student-vs-cluster">Étudiant vs Cluster</option>
+                                <option value="two-clusters">Deux Clusters</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="student-selector" class="student-selector">
+                        <!-- Dynamiquement rempli -->
+                    </div>
+                    <div id="profile-radar" class="chart-container"></div>
+                    <div class="chart-footer">
+                        <button id="exportRadarSVG" class="export-btn">📥 Exporter SVG</button>
+                        <button id="exportRadarPNG" class="export-btn">📥 Exporter PNG</button>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: Détails du Cluster Sélectionné -->
+                <div class="chart-card">
+                    <div class="card-header">
+                        <h3>🔍 Analyse du Cluster</h3>
+                        <div class="cluster-id-display">
+                            Cluster <span id="current-cluster-id">-</span>
+                            <span class="cluster-risk-badge" id="cluster-risk-badge">Risque Moyen</span>
+                        </div>
+                    </div>
+                    <div id="cluster-stats" class="cluster-stats">
+                        <!-- Statistiques dynamiques -->
+                    </div>
+                    <div id="cluster-heatmap" class="small-chart"></div>
+                    <div class="chart-footer">
+                        <button id="show-recommendations" class="action-btn">🎯 Voir Recommandations</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 5: Small Multiples -->
+            <div class="chart-card full-width">
+                <div class="card-header">
+                    <h3>📈 Distributions Clés par Cluster</h3>
+                    <div class="chart-controls">
+                        <select id="distribution-variable">
+                            <option value="sleep_duration">Durée de Sommeil</option>
+                            <option value="academic_pressure">Pression Académique</option>
+                            <option value="financial_stress">Stress Financier</option>
+                            <option value="study_satisfaction">Satisfaction Études</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="cluster-distributions" class="small-multiples"></div>
+            </div>
+
+            <!-- SECTION 6: Étudiants Atypiques -->
+            <div class="chart-card full-width">
+                <div class="card-header">
+                    <h3>⚠️ Étudiants Atypiques (Outliers)</h3>
+                    <div class="chart-controls">
+                        <select id="outlier-metric">
+                            <option value="mahalanobis">Distance de Mahalanobis</option>
+                            <option value="isolation">Forêt d'Isolation</option>
+                            <option value="zscore">Score Z Combiné</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="outliers-list" class="outliers-container"></div>
+            </div>
+
+            <!-- SECTION 7: Recommandations (Modal) -->
+            <div id="recommendations-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>🎯 Plan d'Action Recommandé</h3>
+                    <div id="action-plan"></div>
+                    <button id="export-plan" class="action-btn">📥 Exporter le Plan</button>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div id="loading-overlay">
+                <div class="loading-spinner"></div>
+                <p>Analyse des profils en cours...</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/charts/clustering.js"></script>
+    <script src="js/charts/radarChart.js"></script>
+    <script src="js/charts/scatterPlot.js"></script>
+    <script src="js/charts/heatmap.js"></script>
+    <script src="js/charts/smallMultiples.js"></script>
+    <script src="js/charts/outliers.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

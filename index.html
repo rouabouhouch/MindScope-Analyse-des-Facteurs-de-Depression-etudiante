@@ -3,44 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindScope - Analyse des facteurs de dépression étudiante</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <title>Lumina | Analytics Santé Mentale - Vue d'ensemble</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>MindScope</h1>
-        <nav>
-            <a href="index.html">Accueil</a>
-            <a href="pages/exploration.html">Exploration</a>
-            <a href="pages/profiling.html">Profiling</a>
-            <a href="pages/multidim.html">Analyse Multidimensionnelle</a>
-            <a href="pages/interactions.html">Interactions</a>
-            <a href="pages/outliers.html">Outliers</a>
-            <a href="pages/comparaison.html">Comparaison</a>
-        </nav>
-    </header>
-
-    <main>
-        <section id="intro">
-            <h2>Contexte et Objectifs</h2>
-            <p>Ce projet vise à analyser les facteurs influençant la dépression chez les étudiants à partir du Student Depression Dataset...</p>
-        </section>
-
-        <section id="quicklinks">
-            <h2>Accès rapide aux analyses</h2>
-            <div class="viz-links">
-                <a href="pages/exploration.html">Explorer les facteurs</a>
-                <a href="pages/profiling.html">Profiling des étudiants</a>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-icon">L</div>
+                <h2>LUMINA</h2>
             </div>
-        </section>
-    </main>
+            <nav class="menu">
+                <a href="index.html" class="menu-item active"><span>📊</span> Vue d'ensemble</a>
+                <a href="profils.html" class="menu-item"><span>👥</span> Profils</a>
+            </nav>
+            <div class="filters-section">
+                <h3>FILTRES</h3>
+                <div class="filter-group">
+                    <label>Genre</label>
+                    <select id="genderFilter">
+                        <option value="all">Tous</option>
+                        <option value="Male">Homme</option>
+                        <option value="Female">Femme</option>
+                    </select>
+                </div>
+            </div>
+        </aside>
 
-    <footer>
-        <p>&copy; 2025 MindScope - Projet étudiant</p>
-    </footer>
+        <main class="main-content" id="overview-page">
+            <header class="header">
+                <h1>Global Student Analytics</h1>
+                <div class="user-info">Projet Master Data Science</div>
+            </header>
 
-    <script src="./js/main.js"></script>
+            <section class="kpi-row" id="kpi-container"></section>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="card-header">Clustering des vulnérabilités (PCA)</div>
+                    <div id="cluster-chart" class="chart-container"></div>
+                </div>
+                <div class="chart-card">
+                    <div class="card-header">Profil de l'étudiant sélectionné</div>
+                    <div id="radar-chart" class="chart-container"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="js/index.js"></script>
 </body>
 </html>
-
