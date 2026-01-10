@@ -4457,7 +4457,6 @@ id,Gender,Age,City,Profession,Academic Pressure,Work Pressure,CGPA,Study Satisfa
 22363,Male,24.0,Surat,Student,1.0,0.0,8.0,1.0,0.0,'Less than 5 hours',Unhealthy,Bachelor of Medicine and Bachelor of Surgery,Yes,1.0,2.0,Yes,0
 22365,Male,20.0,Nashik,Student,3.0,0.0,7.13,5.0,0.0,'7-8 hours',Moderate,,Yes,1.0,2.0,No,1
 22370,Female,19.0,Bangalore,Student,3.0,0.0,7.25,3.0,0.0,'More than 8 hours',Healthy,,Yes,7.0,1.0,Yes,1
-22377,Female,32.0,Varanasi,Student,3.0,0.0,5.64,1.0,0.0,'5-6 hours',Healthy,Bachelor of Computer Applications,No,12.0,?,No,1
 22380,Male,25.0,Agra,Student,1.0,0.0,5.11,1.0,0.0,'More than 8 hours',Moderate,Bachelor of Arts,No,4.0,4.0,No,0
 22390,Male,24.0,Ludhiana,Student,3.0,0.0,9.72,2.0,0.0,'Less than 5 hours',Moderate,Bachelor of Laws,Yes,9.0,4.0,No,1
 22395,Male,23.0,Kolkata,Student,3.0,0.0,7.25,2.0,0.0,'7-8 hours',Unhealthy,Master of Science,Yes,10.0,4.0,No,1
@@ -13595,7 +13594,6 @@ id,Gender,Age,City,Profession,Academic Pressure,Work Pressure,CGPA,Study Satisfa
 68893,Female,20.0,Srinagar,Student,3.0,0.0,5.99,1.0,0.0,'5-6 hours',Unhealthy,,Yes,9.0,3.0,Yes,1
 68896,Male,21.0,Ludhiana,Student,4.0,0.0,6.27,5.0,0.0,'7-8 hours',Unhealthy,Bachelor of Architecture,Yes,11.0,5.0,Yes,1
 68906,Male,26.0,Rajkot,Student,1.0,0.0,9.44,4.0,0.0,'Less than 5 hours',Moderate,Bachelor of Computer Applications,Yes,0.0,3.0,Yes,1
-68910,Male,29.0,Hyderabad,Student,2.0,0.0,8.94,3.0,0.0,'Less than 5 hours',Unhealthy,Bachelor of Education,No,12.0,?,Yes,0
 68911,Male,20.0,Kanpur,Student,4.0,0.0,6.0,2.0,0.0,'More than 8 hours',Unhealthy,,No,8.0,5.0,No,1
 68918,Male,20.0,Delhi,Student,3.0,0.0,5.66,2.0,0.0,'Less than 5 hours',Unhealthy,,Yes,8.0,5.0,Yes,1
 68924,Female,24.0,Faridabad,Student,1.0,0.0,7.39,1.0,0.0,'Less than 5 hours',Moderate,Bachelor of Medicine and Bachelor of Surgery,No,9.0,1.0,No,0
@@ -19265,7 +19263,6 @@ id,Gender,Age,City,Profession,Academic Pressure,Work Pressure,CGPA,Study Satisfa
 97589,Female,30.0,Patna,Student,1.0,0.0,8.92,3.0,0.0,'7-8 hours',Healthy,Bachelor of Architecture,No,7.0,4.0,No,0
 97594,Male,24.0,Vasai-Virar,Student,2.0,0.0,8.04,3.0,0.0,'5-6 hours',Moderate,Master of Arts,No,0.0,2.0,No,0
 97605,Female,18.0,Chennai,Student,3.0,0.0,5.82,3.0,0.0,'7-8 hours',Moderate,,No,7.0,2.0,Yes,0
-97610,Female,20.0,Kolkata,Student,1.0,0.0,6.83,1.0,0.0,'5-6 hours',Healthy,Bachelor of Medicine and Bachelor of Surgery,No,9.0,?,Yes,0
 97611,Female,34.0,Thane,Student,3.0,0.0,9.56,1.0,0.0,'More than 8 hours',Unhealthy,Master of Commerce,Yes,10.0,1.0,No,0
 97615,Male,18.0,Thane,Student,1.0,0.0,7.25,4.0,0.0,'5-6 hours',Unhealthy,,Yes,7.0,4.0,Yes,1
 97621,Male,28.0,Agra,Student,3.0,0.0,8.88,4.0,0.0,'5-6 hours',Unhealthy,Master of Science,Yes,0.0,5.0,Yes,0
