@@ -169,6 +169,8 @@
     <div id="bubble-chart-container" class="bubble-chart">
         <div id="bubble-tooltip" class="bubble-tooltip"></div>
     </div>
+    <div id="clust-out-container" class="bubble-chart">
+    </div>
 </div>
 
             <!-- SECTION 6: Étudiants Atypiques -->
@@ -180,7 +182,47 @@
                     </div>
                 </div>
                 <div id="outliers-list" class="outliers-container"></div>
+
+                <!-- SECTION 7: Détails Détailés par Cluster -->
+<div class="chart-card full-width">
+    <div class="card-header">
+        <h3>📋 Détails Détailés par Cluster</h3>
+        <div class="chart-controls">
+            <select id="detailed-cluster-select">
+                <option value="all">Tous les clusters</option>
+                <!-- Les options seront ajoutées dynamiquement -->
+            </select>
+            <button id="toggle-detailed-view" class="control-btn">📊 Vue Compacte</button>
+            <button id="export-cluster-details" class="control-btn">📥 Exporter Rapport</button>
+        </div>
+    </div>
+    
+    <!-- Conteneur pour les détails des clusters -->
+    <div id="clusters-detailed-container" class="clusters-detailed-container">
+        <!-- Les détails des clusters seront insérés ici dynamiquement -->
+    </div>
+</div>
+    <div class="svg-content-container">
+        <!-- Graphique SVG -->
+        <div class="svg-container" id="scalable-svg-container"></div>
+        
+        <!-- Liste des étudiants du cluster -->
+        <div class="cluster-students-container">
+            <h4>👥 Étudiants du Cluster</h4>
+            <div id="cluster-students-list" class="cluster-students-list"></div>
+        </div>
+    </div>
+    <div class="outliers-section">
+        <h4>⚠️ Outliers du Cluster</h4>
+        <div id="cluster-outliers-list" class="outliers-list"></div>
+    </div>
+</div>
             </div>
+
+            <div class="chart-card full-width" id="cluster-detail-section" style="display: none;">
+
+
+    
             <!-- Loading Overlay -->
             
         </main>
@@ -195,7 +237,10 @@
     <script src="js/charts/smallMultiples.js"></script>
     <script src="js/charts/outliers.js"></script>
     <script src="js/profile.js"></script>
-    <script src="js/main.js"></script>
     <script src="js/charts/SunburstChart.js"></script>
+    <script src="js/charts/clusterOutlierCharts.js"></script>
+    <script src="js/main.js"></script>
+
+
 </body>
 </html>
