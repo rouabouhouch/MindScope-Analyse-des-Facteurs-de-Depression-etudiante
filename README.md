@@ -72,7 +72,7 @@ npm start
 
 
 4. **View the application**:
-Open your browser and navigate to `http://localhost:3000`.
+Open your browser and navigate to `http://localhost:8080`.
 
 ## Core Features
 
