@@ -1,11 +1,12 @@
-// interactions.js - Version avec graphiques interconnectés
+// interactions.js - Version corrigée avec animations simples
 // Compatible avec CSV: "Academic Pressure", "Sleep Duration", "Depression", etc.
 
 let studentData = [];
-let filteredData = []; // Données filtrées pour les graphiques secondaires
+let filteredData = [];
 let lastGridData = null;
 let numericExtents = null;
-let currentHeatmapCell = null; // Cellule actuellement sélectionnée
+let currentHeatmapCell = null;
+let animationEnabled = true;
 
 let currentState = {
   factorX: "sleep_duration",
@@ -14,28 +15,19 @@ let currentState = {
 };
 
 // -------------------------
-// SCHEMA DE DONNÉES
+// SCHEMA DE DONNÉES (inchangé)
 // -------------------------
 const SCHEMA = {
-  // Outcome
   "Depression": { key: "depression", type: "binary", label: "Dépression (0/1)", parse: v => Number(v) || 0 },
-
-  // Numeric
   "Age": { key: "age", type: "number", label: "Âge", parse: v => +v },
   "CGPA": { key: "cgpa", type: "number", label: "CGPA", parse: v => +v },
   "Work/Study Hours": { key: "hours", type: "number", label: "Heures Travail/Étude", parse: v => +v },
-
-  // Ordinal 1..5
   "Academic Pressure": { key: "academic_pressure", type: "ordinal5", label: "Pression Académique", parse: v => +v },
   "Work Pressure": { key: "work_pressure", type: "ordinal5", label: "Pression au Travail", parse: v => +v },
   "Study Satisfaction": { key: "study_satisfaction", type: "ordinal5", label: "Satisfaction Études", parse: v => +v },
   "Job Satisfaction": { key: "job_satisfaction", type: "ordinal5", label: "Satisfaction Travail", parse: v => +v },
   "Financial Stress": { key: "financial_stress", type: "ordinal5", label: "Stress Financier", parse: v => +v },
-
-  // Sleep (special)
   "Sleep Duration": { key: "sleep_duration", type: "sleep_ordinal", label: "Durée de Sommeil", parse: v => parseSleepDuration(v) },
-
-  // Categorical
   "Gender": { key: "gender", type: "category", label: "Genre", parse: v => String(v ?? "").trim() },
   "City": { key: "city", type: "category", label: "Ville", parse: v => String(v ?? "").trim() },
   "Profession": { key: "profession", type: "category", label: "Profession", parse: v => String(v ?? "").trim() },
@@ -63,7 +55,7 @@ function clamp15(n, fallback = 3) {
 }
 
 // -------------------------
-// UTILITAIRES UI
+// UTILITAIRES UI (version simplifiée)
 // -------------------------
 function showLoading(container, message = "Chargement...") {
   d3.select(container).html(`
@@ -87,7 +79,7 @@ function showError(container, message) {
 }
 
 // -------------------------
-// TRAITEMENT DES DONNÉES
+// TRAITEMENT DES DONNÉES (inchangé)
 // -------------------------
 function processData(rows) {
   return rows.map((r, i) => {
@@ -198,7 +190,7 @@ function getHeatmapValue(d, factorKey) {
 }
 
 // -------------------------
-// INITIALISATION
+// INITIALISATION (version corrigée)
 // -------------------------
 async function initInteractions() {
   showLoading("#heatmap-container", "Chargement des données...");
@@ -206,7 +198,7 @@ async function initInteractions() {
   try {
     const raw = await d3.csv("data/student_depression_dataset.csv");
     studentData = processData(raw);
-    filteredData = [...studentData]; // Initialiser les données filtrées
+    filteredData = [...studentData];
     numericExtents = computeNumericExtents(studentData);
 
     setupDropdowns();
@@ -216,13 +208,10 @@ async function initInteractions() {
     renderHeatmap();
     updateSimulator();
     updateInsights();
-
-    // RENDER DES DEUX NOUVEAUX GRAPHIQUES
     renderBarChart();
     renderHistogram();
 
     console.log("✅ Données chargées :", studentData.length, "étudiants");
-    console.log("📊 Dépression :", studentData.filter(d => d.depression === 1).length, "cas");
 
   } catch (e) {
     console.error("❌ Erreur :", e);
@@ -231,12 +220,12 @@ async function initInteractions() {
 }
 
 // -------------------------
-// GESTION DES ÉVÉNEMENTS
+// GESTION DES ÉVÉNEMENTS (version corrigée)
 // -------------------------
 function setupEvents() {
-  d3.select("#factor-x").on("change", function () {
+  d3.select("#factor-x").on("change", function() {
     currentState.factorX = this.value;
-    currentHeatmapCell = null; // Réinitialiser la sélection
+    currentHeatmapCell = null;
     updateFactorLabels();
     renderHeatmap();
     updateInsights();
@@ -244,9 +233,9 @@ function setupEvents() {
     updateFilteredData();
   });
 
-  d3.select("#factor-y").on("change", function () {
+  d3.select("#factor-y").on("change", function() {
     currentState.factorY = this.value;
-    currentHeatmapCell = null; // Réinitialiser la sélection
+    currentHeatmapCell = null;
     updateFactorLabels();
     renderHeatmap();
     updateInsights();
@@ -254,7 +243,7 @@ function setupEvents() {
     updateFilteredData();
   });
 
-  d3.select("#risk-threshold").on("input", function () {
+  d3.select("#risk-threshold").on("input", function() {
     currentState.threshold = this.value / 100;
     d3.select("#threshold-value").text(this.value + "%");
     renderHeatmap();
@@ -272,12 +261,6 @@ function setupEvents() {
   d3.select("#sim-x").on("input", updateSimulator);
   d3.select("#sim-y").on("input", updateSimulator);
 
-  d3.select("#refresh-heatmap").on("click", () => {
-    renderHeatmap();
-    updateInsights();
-  });
-
-  // Événements pour les nouveaux graphiques
   d3.select("#group-by").on("change", renderBarChart);
   d3.select("#numeric-var").on("change", renderHistogram);
 
@@ -296,15 +279,10 @@ function updateFactorLabels() {
   d3.select("#factor-y-label-text").text(fy ? fy.label : currentState.factorY);
 }
 
-// -------------------------
-// FILTRAGE DES DONNÉES BASÉ SUR LA CELLULE SÉLECTIONNÉE
-// -------------------------
 function updateFilteredData() {
   if (!currentHeatmapCell) {
-    // Si aucune cellule n'est sélectionnée, montrer toutes les données
     filteredData = [...studentData];
   } else {
-    // Filtrer les données pour correspondre à la cellule sélectionnée
     const { x, y, factorX, factorY } = currentHeatmapCell;
     filteredData = studentData.filter(d => 
       getHeatmapValue(d, factorX) === x && 
@@ -312,13 +290,12 @@ function updateFilteredData() {
     );
   }
   
-  // Mettre à jour les graphiques
   renderBarChart();
   renderHistogram();
 }
 
 // -------------------------
-// HEATMAP INTERACTIVE
+// HEATMAP AVEC ANIMATIONS SIMPLES
 // -------------------------
 function calculateGridData() {
   const gridData = [];
@@ -350,8 +327,8 @@ function renderHeatmap() {
   }
 
   const width = container.node().clientWidth || 700;
-  const height = 360;
-  const margin = { top: 60, right: 110, bottom: 80, left: 80 };
+  const height = 420;
+  const margin = { top: 80, right: 20, bottom: 90, left: 80 };
 
   const svg = container.append("svg")
     .attr("width", width)
@@ -364,75 +341,101 @@ function renderHeatmap() {
   const xScale = d3.scaleBand()
     .domain(d3.range(1, 6))
     .range([margin.left, width - margin.right])
-    .padding(0.1);
+    .padding(0.15);
 
   const yScale = d3.scaleBand()
     .domain(d3.range(1, 6))
     .range([height - margin.bottom, margin.top])
-    .padding(0.1);
+    .padding(0.15);
 
   const colorScale = d3.scaleSequential(d3.interpolateRdYlBu).domain([1, 0]);
 
-  // Cellules
+  // Cellules avec animation
   const cells = svg.selectAll(".heatmap-cell")
     .data(gridData)
     .enter()
     .append("rect")
     .attr("class", "heatmap-cell")
     .attr("x", d => xScale(d.x))
-    .attr("y", d => yScale(d.y))
+    .attr("y", height - margin.bottom) // Commence en bas pour animation
     .attr("width", xScale.bandwidth())
-    .attr("height", yScale.bandwidth())
+    .attr("height", 0) // Commence avec hauteur 0
     .attr("fill", d => colorScale(d.risk))
     .attr("stroke", "white")
     .attr("stroke-width", 1)
     .style("cursor", "pointer")
-    .on("mouseover", function (event, d) {
+    .style("opacity", 0)
+    .on("mouseover", function(event, d) {
+      if (animationEnabled) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("stroke-width", 3)
+          .attr("stroke", "#1e293b");
+      }
       showCellTooltip(event, d);
-      d3.select(this).attr("stroke", "#1e293b").attr("stroke-width", 2);
     })
     .on("mousemove", moveTooltip)
-    .on("mouseout", function () {
-      hideTooltip();
+    .on("mouseout", function(event, d) {
+      if (animationEnabled) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("stroke-width", currentHeatmapCell && 
+            currentHeatmapCell.x === d.x && currentHeatmapCell.y === d.y ? 3 : 1)
+          .attr("stroke", currentHeatmapCell && 
+            currentHeatmapCell.x === d.x && currentHeatmapCell.y === d.y ? "#1e293b" : "white");
+      }
       if (!currentHeatmapCell || 
-          currentHeatmapCell.x !== d3.select(this).datum().x || 
-          currentHeatmapCell.y !== d3.select(this).datum().y) {
-        d3.select(this).attr("stroke", "white").attr("stroke-width", 1);
+          currentHeatmapCell.x !== d.x || 
+          currentHeatmapCell.y !== d.y) {
+        hideTooltip();
       }
     })
-    .on("click", function (event, d) {
-      // Mettre à jour la cellule sélectionnée
+    .on("click", function(event, d) {
       const clickedCell = d;
       
-      // Réinitialiser le style de toutes les cellules
+      // Animation de sélection
       svg.selectAll(".heatmap-cell")
-        .attr("stroke", "white")
-        .attr("stroke-width", 1);
+        .transition()
+        .duration(300)
+        .attr("stroke-width", 1)
+        .attr("stroke", "white");
       
-      // Mettre en évidence la cellule cliquée
       d3.select(this)
+        .transition()
+        .duration(300)
         .attr("stroke", "#1e293b")
         .attr("stroke-width", 3);
+      
+      currentHeatmapCell = clickedCell;
+      updateFilteredData();
       
       // Mettre à jour le simulateur
       d3.select("#sim-x").property("value", clickedCell.x);
       d3.select("#sim-y").property("value", clickedCell.y);
-      
-      // Stocker la cellule sélectionnée
-      currentHeatmapCell = clickedCell;
-      
-      // Mettre à jour les données filtrées
-      updateFilteredData();
-      
-      // Mettre à jour le simulateur
       updateSimulator();
       
-      // Mettre à jour l'info-bulle pour indiquer le filtrage
       showCellTooltip(event, {
         ...clickedCell,
         filtered: true
       });
     });
+
+  // Animation des cellules
+  if (animationEnabled) {
+    cells.transition()
+      .delay((d, i) => (d.x + d.y) * 30)
+      .duration(600)
+      .attr("y", d => yScale(d.y))
+      .attr("height", yScale.bandwidth())
+      .style("opacity", 1)
+      .ease(d3.easeElasticOut);
+  } else {
+    cells.attr("y", d => yScale(d.y))
+      .attr("height", yScale.bandwidth())
+      .style("opacity", 1);
+  }
 
   // Mettre en évidence la cellule déjà sélectionnée
   if (currentHeatmapCell) {
@@ -459,7 +462,18 @@ function renderHeatmap() {
     .style("font-size", "11px")
     .style("font-weight", "600")
     .style("fill", d => (d.risk > 0.5 ? "white" : "#334155"))
+    .style("opacity", 0)
     .text(d => (d.count > 0 ? `${Math.round(d.risk * 100)}%` : ""));
+
+  if (animationEnabled) {
+    svg.selectAll(".cell-text")
+      .transition()
+      .delay((d, i) => (d.x + d.y) * 30 + 400)
+      .duration(400)
+      .style("opacity", 1);
+  } else {
+    svg.selectAll(".cell-text").style("opacity", 1);
+  }
 
   // Axes
   svg.append("g")
@@ -482,87 +496,94 @@ function renderHeatmap() {
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
     .style("font-weight", "700")
+    .style("fill", "#1e293b")
     .text(`Interaction: ${fx?.label || currentState.factorX} × ${fy?.label || currentState.factorY}`);
 
   svg.append("text")
     .attr("x", width / 2)
-    .attr("y", 48)
+    .attr("y", 55)
     .attr("text-anchor", "middle")
     .style("font-size", "12px")
-    .style("font-weight", "500")
+    .style("font-weight", currentHeatmapCell ? "600" : "500")
     .style("fill", currentHeatmapCell ? "#dc2626" : "#64748b")
     .text(currentHeatmapCell ? 
       `Filtre actif: ${fx?.label || currentState.factorX}=${currentHeatmapCell.x}, ${fy?.label || currentState.factorY}=${currentHeatmapCell.y}` : 
       "Cliquez sur une cellule pour filtrer les graphiques ci-dessous"
     );
 
-  svg.append("text")
-    .attr("x", width / 2)
-    .attr("y", height - 20)
-    .attr("text-anchor", "middle")
-    .style("font-size", "13px")
-    .style("font-weight", "600")
-    .style("fill", "#475569")
-    .text(`${fx?.label || currentState.factorX} (bin 1 → 5)`);
-
-  svg.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("x", -height / 2)
-    .attr("y", 30)
-    .attr("text-anchor", "middle")
-    .style("font-size", "13px")
-    .style("font-weight", "600")
-    .style("fill", "#475569")
-    .text(`${fy?.label || currentState.factorY} (bin 1 → 5)`);
-
   // Légende
-  drawLegend(svg, colorScale, width, margin);
+  drawLegend(svg, colorScale, width, height, margin);
   updateStatistics(gridData);
 }
 
-function drawLegend(svg, colorScale, width, margin) {
-  const legendWidth = 200;
-  const legendHeight = 15;
-  const x = width - margin.right - legendWidth;
-  const y = margin.top - 10;
+function drawLegend(svg, colorScale, width, height, margin) {
+  const legendWidth = 300;
+  const legendHeight = 20;
+  const legendX = (width - legendWidth) / 2;
+  const legendY = height - 50;
+
+  const legendGroup = svg.append("g")
+    .attr("class", "legend-group")
+    .attr("transform", `translate(${legendX}, ${legendY})`);
 
   const defs = svg.append("defs");
-  const id = "grad-" + Date.now();
-
-  const grad = defs.append("linearGradient")
-    .attr("id", id)
+  const gradientId = "heatmap-gradient-" + Date.now();
+  
+  const gradient = defs.append("linearGradient")
+    .attr("id", gradientId)
     .attr("x1", "0%").attr("y1", "0%")
     .attr("x2", "100%").attr("y2", "0%");
 
-  const stops = 8;
-  for (let i = 0; i <= stops; i++) {
-    grad.append("stop")
-      .attr("offset", `${(i / stops) * 100}%`)
-      .attr("stop-color", colorScale(i / stops));
-  }
+  [0, 0.25, 0.5, 0.75, 1].forEach(offset => {
+    gradient.append("stop")
+      .attr("offset", `${offset * 100}%`)
+      .attr("stop-color", colorScale(1 - offset));
+  });
 
-  svg.append("rect")
-    .attr("x", x)
-    .attr("y", y)
+  legendGroup.append("rect")
     .attr("width", legendWidth)
     .attr("height", legendHeight)
-    .style("fill", `url(#${id})`)
-    .style("rx", 4);
+    .style("fill", `url(#${gradientId})`)
+    .style("rx", 4)
+    .style("stroke", "#cbd5e1")
+    .style("stroke-width", 1);
 
-  svg.append("text")
-    .attr("x", x)
-    .attr("y", y - 5)
+  legendGroup.append("text")
+    .attr("x", 0)
+    .attr("y", -5)
     .style("font-size", "11px")
     .style("fill", "#64748b")
+    .style("font-weight", "500")
     .text("Faible risque");
 
-  svg.append("text")
-    .attr("x", x + legendWidth)
-    .attr("y", y - 5)
+  legendGroup.append("text")
+    .attr("x", legendWidth)
+    .attr("y", -5)
     .attr("text-anchor", "end")
     .style("font-size", "11px")
     .style("fill", "#64748b")
+    .style("font-weight", "500")
     .text("Haut risque");
+
+  [0, 0.25, 0.5, 0.75, 1].forEach(offset => {
+    const xPos = offset * legendWidth;
+    
+    legendGroup.append("line")
+      .attr("x1", xPos)
+      .attr("x2", xPos)
+      .attr("y1", legendHeight)
+      .attr("y2", legendHeight + 5)
+      .style("stroke", "#94a3b8")
+      .style("stroke-width", 1);
+    
+    legendGroup.append("text")
+      .attr("x", xPos)
+      .attr("y", legendHeight + 18)
+      .attr("text-anchor", offset === 1 ? "end" : offset === 0 ? "start" : "middle")
+      .style("font-size", "10px")
+      .style("fill", "#64748b")
+      .text(`${Math.round((1 - offset) * 100)}%`);
+  });
 }
 
 function updateStatistics(gridData) {
@@ -586,14 +607,13 @@ function updateStatistics(gridData) {
 }
 
 // -------------------------
-// SIMULATEUR DE RISQUE
+// SIMULATEUR AVEC ANIMATIONS SIMPLES
 // -------------------------
 function calculateRisk(x, y) {
   const gridData = lastGridData || calculateGridData();
   const cell = gridData.find(d => d.x === x && d.y === y);
   if (cell && cell.count > 0) return cell.risk;
 
-  // Fallback: voisinage proche
   const fx = currentState.factorX;
   const fy = currentState.factorY;
 
@@ -649,7 +669,7 @@ function updateSimulator() {
 }
 
 // -------------------------
-// INSIGHTS AUTOMATIQUES
+// INSIGHTS (inchangé)
 // -------------------------
 function updateInsights() {
   const gridData = lastGridData || calculateGridData();
@@ -725,11 +745,344 @@ function updateThresholdsText(thresholds) {
 }
 
 // -------------------------
+// BAR CHART AVEC ANIMATIONS
+// -------------------------
+function renderBarChart() {
+  const container = d3.select("#bar-container");
+  container.html("");
+
+  const groupKey = d3.select("#group-by").property("value");
+  if (!groupKey) {
+    container.html("<div class='loading'>Sélectionnez une variable catégorielle</div>");
+    return;
+  }
+
+  const width = container.node().clientWidth || 600;
+  const height = 380;
+  const margin = { top: 70, right: 20, bottom: 100, left: 70 };
+
+  const svg = container.append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("class", "bar-chart-svg");
+
+  // Utiliser filteredData
+  const groups = d3.group(filteredData, d => d[groupKey] ?? "Non spécifié");
+  let arr = Array.from(groups, ([category, rows]) => {
+    const total = rows.length;
+    const depressed = rows.filter(r => r.depression === 1).length;
+    return {
+      category,
+      total,
+      depressed,
+      rate: total > 0 ? depressed / total : 0,
+      label: `${category} (n=${total})`
+    };
+  });
+
+  arr = arr.filter(d => d.total > 0);
+  arr.sort((a, b) => b.rate - a.rate);
+  arr = arr.slice(0, 10);
+
+  if (arr.length === 0) {
+    container.html("<div class='loading'>Pas de données pour cette catégorie</div>");
+    return;
+  }
+
+  // Scales
+  const x = d3.scaleBand()
+    .domain(arr.map(d => d.category))
+    .range([margin.left, width - margin.right])
+    .padding(0.25);
+
+  const y = d3.scaleLinear()
+    .domain([0, Math.max(0.5, d3.max(arr, d => d.rate) || 0.5)])
+    .nice()
+    .range([height - margin.bottom, margin.top]);
+
+  // Axes
+  svg.append("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .style("text-anchor", "end")
+    .attr("transform", "rotate(-35)")
+    .style("font-size", "11px");
+
+  svg.append("g")
+    .attr("class", "y-axis")
+    .attr("transform", `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y).tickFormat(d3.format(".0%")))
+    .style("font-size", "11px");
+
+  // Barres avec animation
+  const bars = svg.selectAll("rect.bar")
+    .data(arr)
+    .enter()
+    .append("rect")
+    .attr("class", "bar")
+    .attr("x", d => x(d.category))
+    .attr("width", x.bandwidth())
+    .attr("y", height - margin.bottom)
+    .attr("height", 0)
+    .attr("fill", currentHeatmapCell ? "#dc2626" : "#6366f1")
+    .attr("rx", 4)
+    .style("cursor", "pointer")
+    .on("mouseover", function(event, d) {
+      if (animationEnabled) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("fill", currentHeatmapCell ? "#ef4444" : "#818cf8");
+      }
+      showBarTooltip(event, d);
+    })
+    .on("mousemove", moveTooltip)
+    .on("mouseout", function(event, d) {
+      if (animationEnabled) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("fill", currentHeatmapCell ? "#dc2626" : "#6366f1");
+      }
+      hideTooltip();
+    });
+
+  // Animation des barres
+  if (animationEnabled) {
+    bars.transition()
+      .delay((d, i) => i * 80)
+      .duration(800)
+      .attr("y", d => y(d.rate))
+      .attr("height", d => (height - margin.bottom) - y(d.rate))
+      .ease(d3.easeElasticOut);
+  } else {
+    bars.attr("y", d => y(d.rate))
+      .attr("height", d => (height - margin.bottom) - y(d.rate));
+  }
+
+  // Labels des barres
+  svg.selectAll("text.bar-label")
+    .data(arr)
+    .enter()
+    .append("text")
+    .attr("class", "bar-label")
+    .attr("x", d => x(d.category) + x.bandwidth() / 2)
+    .attr("y", d => y(d.rate) - 8)
+    .attr("text-anchor", "middle")
+    .style("font-size", "11px")
+    .style("font-weight", "600")
+    .style("fill", "#334155")
+    .text(d => `${Math.round(d.rate * 100)}%`);
+
+  // Titre
+  const meta = getFactorMetaByKey(groupKey);
+  let titleText = `Taux de dépression par ${meta?.label || groupKey}`;
+  
+  svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", 25)
+    .attr("text-anchor", "middle")
+    .style("font-size", currentHeatmapCell ? "15px" : "16px")
+    .style("font-weight", "700")
+    .style("fill", currentHeatmapCell ? "#dc2626" : "#1e293b")
+    .text(titleText);
+
+  // Sous-titre
+  const totalFiltered = filteredData.length;
+  const totalAll = studentData.length;
+  
+  svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", 45)
+    .attr("text-anchor", "middle")
+    .style("font-size", "12px")
+    .style("font-weight", currentHeatmapCell ? "600" : "500")
+    .style("fill", currentHeatmapCell ? "#dc2626" : "#64748b")
+    .text(currentHeatmapCell ? 
+      `${totalFiltered} étudiants (${Math.round(totalFiltered/totalAll*100)}% du total)` :
+      `${totalAll} étudiants (100% du total)`
+    );
+}
+
+// -------------------------
+// HISTOGRAMME AVEC ANIMATIONS
+// -------------------------
+function renderHistogram() {
+  const container = d3.select("#hist-container");
+  container.html("");
+
+  const varKey = d3.select("#numeric-var").property("value");
+  if (!varKey) {
+    container.html("<div class='loading'>Sélectionnez une variable numérique</div>");
+    return;
+  }
+
+  const width = container.node().clientWidth || 600;
+  const height = 380;
+  const margin = { top: 70, right: 20, bottom: 90, left: 70 };
+
+  const svg = container.append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("class", "histogram-svg");
+
+  // Utiliser filteredData
+  const values0 = filteredData.filter(d => d.depression === 0).map(d => d[varKey]).filter(v => Number.isFinite(v));
+  const values1 = filteredData.filter(d => d.depression === 1).map(d => d[varKey]).filter(v => Number.isFinite(v));
+  const allValues = values0.concat(values1);
+
+  if (allValues.length === 0) {
+    container.html("<div class='loading'>Pas de données numériques pour cette variable</div>");
+    return;
+  }
+
+  // Scales
+  const x = d3.scaleLinear()
+    .domain(d3.extent(allValues))
+    .nice()
+    .range([margin.left, width - margin.right]);
+
+  // Create bins
+  const bins = d3.bin()
+    .domain(x.domain())
+    .thresholds(15);
+
+  const b0 = bins(values0);
+  const b1 = bins(values1);
+
+  const maxCount = Math.max(
+    d3.max(b0, d => d.length) || 0,
+    d3.max(b1, d => d.length) || 0
+  );
+
+  const y = d3.scaleLinear()
+    .domain([0, maxCount])
+    .nice()
+    .range([height - margin.bottom, margin.top]);
+
+  // Axes
+  svg.append("g")
+    .attr("class", "x-axis")
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x))
+    .style("font-size", "11px");
+
+  svg.append("g")
+    .attr("class", "y-axis")
+    .attr("transform", `translate(${margin.left},0)`)
+    .call(d3.axisLeft(y))
+    .style("font-size", "11px");
+
+  // Barres avec animation (sans dépression)
+  const bars0 = svg.selectAll("rect.h0")
+    .data(b0)
+    .enter()
+    .append("rect")
+    .attr("class", "h0")
+    .attr("x", d => x(d.x0) + 1)
+    .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 2))
+    .attr("y", height - margin.bottom)
+    .attr("height", 0)
+    .attr("fill", currentHeatmapCell ? "#f87171" : "#60a5fa")
+    .attr("opacity", 0.7)
+    .style("cursor", "pointer")
+    .on("mouseover", function(event, d) {
+      if (animationEnabled) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("opacity", 0.9);
+      }
+      showHistTooltip(event, d, 0);
+    })
+    .on("mousemove", moveTooltip)
+    .on("mouseout", function() {
+      if (animationEnabled) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("opacity", 0.7);
+      }
+      hideTooltip();
+    });
+
+  // Barres avec animation (avec dépression)
+  const bars1 = svg.selectAll("rect.h1")
+    .data(b1)
+    .enter()
+    .append("rect")
+    .attr("class", "h1")
+    .attr("x", d => x(d.x0) + 1)
+    .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 2))
+    .attr("y", height - margin.bottom)
+    .attr("height", 0)
+    .attr("fill", currentHeatmapCell ? "#dc2626" : "#ef4444")
+    .attr("opacity", 0.6)
+    .style("cursor", "pointer")
+    .on("mouseover", function(event, d) {
+      if (animationEnabled) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("opacity", 0.9);
+      }
+      showHistTooltip(event, d, 1);
+    })
+    .on("mousemove", moveTooltip)
+    .on("mouseout", function() {
+      if (animationEnabled) {
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .attr("opacity", 0.6);
+      }
+      hideTooltip();
+    });
+
+  // Animation des hauteurs
+  if (animationEnabled) {
+    bars0.transition()
+      .delay((d, i) => i * 40)
+      .duration(600)
+      .attr("y", d => y(d.length))
+      .attr("height", d => (height - margin.bottom) - y(d.length))
+      .ease(d3.easeCubicOut);
+
+    bars1.transition()
+      .delay((d, i) => i * 40 + 200)
+      .duration(600)
+      .attr("y", d => y(d.length))
+      .attr("height", d => (height - margin.bottom) - y(d.length))
+      .ease(d3.easeCubicOut);
+  } else {
+    bars0.attr("y", d => y(d.length))
+      .attr("height", d => (height - margin.bottom) - y(d.length));
+    bars1.attr("y", d => y(d.length))
+      .attr("height", d => (height - margin.bottom) - y(d.length));
+  }
+
+  // Titre
+  const meta = getFactorMetaByKey(varKey);
+  let titleText = `Distribution de ${meta?.label || varKey} par statut de dépression`;
+  
+  svg.append("text")
+    .attr("x", width / 2)
+    .attr("y", 25)
+    .attr("text-anchor", "middle")
+    .style("font-size", currentHeatmapCell ? "15px" : "16px")
+    .style("font-weight", "700")
+    .style("fill", currentHeatmapCell ? "#dc2626" : "#1e293b")
+    .text(titleText);
+}
+
+// -------------------------
 // RÉINITIALISATION
 // -------------------------
 function resetState() {
   currentState = { factorX: "sleep_duration", factorY: "financial_stress", threshold: 0.5 };
-  currentHeatmapCell = null; // Réinitialiser la sélection
+  currentHeatmapCell = null;
 
   d3.select("#factor-x").property("value", currentState.factorX);
   d3.select("#factor-y").property("value", currentState.factorY);
@@ -742,13 +1095,12 @@ function resetState() {
   renderHeatmap();
   updateSimulator();
   updateInsights();
-
   renderBarChart();
   renderHistogram();
 }
 
 // -------------------------
-// TOOLTIP GLOBAL
+// TOOLTIP (inchangé)
 // -------------------------
 function ensureTooltip() {
   let t = d3.select("body").select(".tooltip");
@@ -804,180 +1156,11 @@ function showCellTooltip(event, d) {
   moveTooltip(event);
 }
 
-function moveTooltip(event) {
-  const t = ensureTooltip();
-  t.style("left", (event.pageX + 15) + "px")
-    .style("top", (event.pageY - 15) + "px");
-}
-
-function hideTooltip() {
-  ensureTooltip().style("display", "none");
-}
-
-// -------------------------
-// 📌 GRAPHIQUE 1: BAR CHART - Taux de dépression par catégorie
-// -------------------------
-function renderBarChart() {
-  const container = d3.select("#bar-container");
-  container.html("");
-
-  const groupKey = d3.select("#group-by").property("value");
-  if (!groupKey) {
-    container.html("<div class='loading'>Sélectionnez une variable catégorielle</div>");
-    return;
-  }
-
-  const width = container.node().clientWidth || 600;
-  const height = 320;
-  const margin = { top: 20, right: 20, bottom: 90, left: 60 };
-
-  const svg = container.append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("class", "bar-chart-svg");
-
-  // Utiliser filteredData au lieu de studentData
-  const groups = d3.group(filteredData, d => d[groupKey] ?? "Non spécifié");
-  let arr = Array.from(groups, ([category, rows]) => {
-    const total = rows.length;
-    const depressed = rows.filter(r => r.depression === 1).length;
-    return {
-      category,
-      total,
-      depressed,
-      rate: total > 0 ? depressed / total : 0,
-      label: `${category} (n=${total})`
-    };
-  });
-
-  // Filter and sort
-  arr = arr.filter(d => d.total > 0);
-  arr.sort((a, b) => b.rate - a.rate);
-  arr = arr.slice(0, 10); // Keep top 10
-
-  if (arr.length === 0) {
-    container.html("<div class='loading'>Pas de données pour cette catégorie</div>");
-    return;
-  }
-
-  // Scales
-  const x = d3.scaleBand()
-    .domain(arr.map(d => d.category))
-    .range([margin.left, width - margin.right])
-    .padding(0.2);
-
-  const y = d3.scaleLinear()
-    .domain([0, Math.max(0.5, d3.max(arr, d => d.rate) || 0.5)])
-    .nice()
-    .range([height - margin.bottom, margin.top]);
-
-  // Axes
-  svg.append("g")
-    .attr("transform", `translate(0,${height - margin.bottom})`)
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-    .style("text-anchor", "end")
-    .attr("transform", "rotate(-35)")
-    .attr("dx", "-0.6em")
-    .attr("dy", "0.25em")
-    .style("font-size", "11px");
-
-  svg.append("g")
-    .attr("transform", `translate(${margin.left},0)`)
-    .call(d3.axisLeft(y).tickFormat(d3.format(".0%")))
-    .style("font-size", "11px");
-
-  // Bars with gradient
-  const defs = svg.append("defs");
-  const gradient = defs.append("linearGradient")
-    .attr("id", "bar-gradient")
-    .attr("x1", "0%").attr("y1", "0%")
-    .attr("x2", "0%").attr("y2", "100%");
-
-  gradient.append("stop")
-    .attr("offset", "0%")
-    .attr("stop-color", currentHeatmapCell ? "#ef4444" : "#6366f1");
-
-  gradient.append("stop")
-    .attr("offset", "100%")
-    .attr("stop-color", currentHeatmapCell ? "#dc2626" : "#4f46e5");
-
-  svg.selectAll("rect.bar")
-    .data(arr)
-    .enter()
-    .append("rect")
-    .attr("class", "bar")
-    .attr("x", d => x(d.category))
-    .attr("y", d => y(d.rate))
-    .attr("width", x.bandwidth())
-    .attr("height", d => (height - margin.bottom) - y(d.rate))
-    .attr("fill", "url(#bar-gradient)")
-    .attr("rx", 4)
-    .style("cursor", "pointer")
-    .on("mouseover", function(event, d) {
-      d3.select(this).attr("opacity", 0.8);
-      showBarTooltip(event, d);
-    })
-    .on("mousemove", moveTooltip)
-    .on("mouseout", function() {
-      d3.select(this).attr("opacity", 1);
-      hideTooltip();
-    });
-
-  // Bar labels
-  svg.selectAll("text.bar-label")
-    .data(arr)
-    .enter()
-    .append("text")
-    .attr("class", "bar-label")
-    .attr("x", d => x(d.category) + x.bandwidth() / 2)
-    .attr("y", d => y(d.rate) - 6)
-    .attr("text-anchor", "middle")
-    .style("font-size", "11px")
-    .style("font-weight", "600")
-    .style("fill", "#334155")
-    .text(d => `${Math.round(d.rate * 100)}%`);
-
-  // Title avec indication de filtre
-  const meta = getFactorMetaByKey(groupKey);
-  let titleText = `Taux de dépression par ${meta?.label || groupKey}`;
-  if (currentHeatmapCell) {
-    const fx = getFactorMetaByKey(currentState.factorX)?.label || currentState.factorX;
-    const fy = getFactorMetaByKey(currentState.factorY)?.label || currentState.factorY;
-    titleText += ` (Filtré: ${fx}=${currentHeatmapCell.x}, ${fy}=${currentHeatmapCell.y})`;
-  }
-
-  svg.append("text")
-    .attr("x", width / 2)
-    .attr("y", 15)
-    .attr("text-anchor", "middle")
-    .style("font-size", currentHeatmapCell ? "13px" : "14px")
-    .style("font-weight", "600")
-    .style("fill", currentHeatmapCell ? "#dc2626" : "#1e293b")
-    .text(titleText);
-
-  // Sous-titre avec comptage
-  const totalFiltered = filteredData.length;
-  const totalAll = studentData.length;
-  const filterText = currentHeatmapCell ? 
-    `${totalFiltered}/${totalAll} étudiants (${Math.round(totalFiltered/totalAll*100)}%)` :
-    `${totalAll} étudiants`;
-
-  svg.append("text")
-    .attr("x", width / 2)
-    .attr("y", 32)
-    .attr("text-anchor", "middle")
-    .style("font-size", "11px")
-    .style("font-weight", currentHeatmapCell ? "600" : "400")
-    .style("fill", currentHeatmapCell ? "#dc2626" : "#64748b")
-    .text(filterText);
-}
-
 function showBarTooltip(event, d) {
   const t = ensureTooltip();
   const filterInfo = currentHeatmapCell ? 
     `<p style="margin:4px 0;font-size:11px;color:#dc2626;font-weight:600">
-      🔍 Données filtrées par la heatmap
+      🔴 Données filtrées par la heatmap
     </p>` : "";
   
   t.html(`
@@ -991,198 +1174,6 @@ function showBarTooltip(event, d) {
   moveTooltip(event);
 }
 
-// -------------------------
-// 📈 GRAPHIQUE 2: HISTOGRAMME - Distribution numérique vs Dépression
-// -------------------------
-function renderHistogram() {
-  const container = d3.select("#hist-container");
-  container.html("");
-
-  const varKey = d3.select("#numeric-var").property("value");
-  if (!varKey) {
-    container.html("<div class='loading'>Sélectionnez une variable numérique</div>");
-    return;
-  }
-
-  const width = container.node().clientWidth || 600;
-  const height = 320;
-  const margin = { top: 20, right: 20, bottom: 45, left: 60 };
-
-  const svg = container.append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .attr("class", "histogram-svg");
-
-  // Utiliser filteredData au lieu de studentData
-  const values0 = filteredData.filter(d => d.depression === 0).map(d => d[varKey]).filter(v => Number.isFinite(v));
-  const values1 = filteredData.filter(d => d.depression === 1).map(d => d[varKey]).filter(v => Number.isFinite(v));
-  const allValues = values0.concat(values1);
-
-  if (allValues.length === 0) {
-    container.html("<div class='loading'>Pas de données numériques pour cette variable</div>");
-    return;
-  }
-
-  // Scales
-  const x = d3.scaleLinear()
-    .domain(d3.extent(allValues))
-    .nice()
-    .range([margin.left, width - margin.right]);
-
-  // Create bins
-  const bins = d3.bin()
-    .domain(x.domain())
-    .thresholds(15); // 15 bins
-
-  const b0 = bins(values0);
-  const b1 = bins(values1);
-
-  const maxCount = Math.max(
-    d3.max(b0, d => d.length) || 0,
-    d3.max(b1, d => d.length) || 0
-  );
-
-  const y = d3.scaleLinear()
-    .domain([0, maxCount])
-    .nice()
-    .range([height - margin.bottom, margin.top]);
-
-  // Axes
-  svg.append("g")
-    .attr("transform", `translate(0,${height - margin.bottom})`)
-    .call(d3.axisBottom(x))
-    .style("font-size", "11px");
-
-  svg.append("g")
-    .attr("transform", `translate(${margin.left},0)`)
-    .call(d3.axisLeft(y))
-    .style("font-size", "11px");
-
-  // Draw histogram for depression=0 (blue)
-  svg.selectAll("rect.h0")
-    .data(b0)
-    .enter()
-    .append("rect")
-    .attr("class", "h0")
-    .attr("x", d => x(d.x0) + 1)
-    .attr("y", d => y(d.length))
-    .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 2))
-    .attr("height", d => (height - margin.bottom) - y(d.length))
-    .attr("fill", currentHeatmapCell ? "#f87171" : "#60a5fa")
-    .attr("opacity", 0.6)
-    .style("cursor", "pointer")
-    .on("mouseover", function(event, d) {
-      d3.select(this).attr("opacity", 0.8);
-      showHistTooltip(event, d, 0);
-    })
-    .on("mousemove", moveTooltip)
-    .on("mouseout", function() {
-      d3.select(this).attr("opacity", 0.6);
-      hideTooltip();
-    });
-
-  // Draw histogram for depression=1 (red)
-  svg.selectAll("rect.h1")
-    .data(b1)
-    .enter()
-    .append("rect")
-    .attr("class", "h1")
-    .attr("x", d => x(d.x0) + 1)
-    .attr("y", d => y(d.length))
-    .attr("width", d => Math.max(0, x(d.x1) - x(d.x0) - 2))
-    .attr("height", d => (height - margin.bottom) - y(d.length))
-    .attr("fill", currentHeatmapCell ? "#dc2626" : "#ef4444")
-    .attr("opacity", 0.5)
-    .style("cursor", "pointer")
-    .on("mouseover", function(event, d) {
-      d3.select(this).attr("opacity", 0.8);
-      showHistTooltip(event, d, 1);
-    })
-    .on("mousemove", moveTooltip)
-    .on("mouseout", function() {
-      d3.select(this).attr("opacity", 0.5);
-      hideTooltip();
-    });
-
-  // Title avec indication de filtre
-  const meta = getFactorMetaByKey(varKey);
-  let titleText = `Distribution de ${meta?.label || varKey} par statut de dépression`;
-  if (currentHeatmapCell) {
-    const fx = getFactorMetaByKey(currentState.factorX)?.label || currentState.factorX;
-    const fy = getFactorMetaByKey(currentState.factorY)?.label || currentState.factorY;
-    titleText += ` (Filtré: ${fx}=${currentHeatmapCell.x}, ${fy}=${currentHeatmapCell.y})`;
-  }
-
-  svg.append("text")
-    .attr("x", width / 2)
-    .attr("y", 15)
-    .attr("text-anchor", "middle")
-    .style("font-size", currentHeatmapCell ? "13px" : "14px")
-    .style("font-weight", "600")
-    .style("fill", currentHeatmapCell ? "#dc2626" : "#1e293b")
-    .text(titleText);
-
-  svg.append("text")
-    .attr("x", width / 2)
-    .attr("y", height - 10)
-    .attr("text-anchor", "middle")
-    .style("font-size", "12px")
-    .style("fill", "#475569")
-    .text(meta?.label || varKey);
-
-  // Legend
-  const legend = svg.append("g")
-    .attr("transform", `translate(${width - 150}, 25)`);
-
-  legend.append("rect")
-    .attr("width", 12)
-    .attr("height", 12)
-    .attr("fill", currentHeatmapCell ? "#f87171" : "#60a5fa")
-    .attr("opacity", 0.7);
-
-  legend.append("text")
-    .attr("x", 18)
-    .attr("y", 10)
-    .style("font-size", "11px")
-    .style("fill", "#334155")
-    .text("Sans dépression");
-
-  legend.append("rect")
-    .attr("y", 18)
-    .attr("width", 12)
-    .attr("height", 12)
-    .attr("fill", currentHeatmapCell ? "#dc2626" : "#ef4444")
-    .attr("opacity", 0.7);
-
-  legend.append("text")
-    .attr("x", 18)
-    .attr("y", 28)
-    .style("font-size", "11px")
-    .style("fill", "#334155")
-    .text("Avec dépression");
-
-  // Indicateur de filtre
-  if (currentHeatmapCell) {
-    const totalFiltered = filteredData.length;
-    const depressedFiltered = filteredData.filter(d => d.depression === 1).length;
-    
-    legend.append("text")
-      .attr("x", 0)
-      .attr("y", 45)
-      .style("font-size", "10px")
-      .style("fill", "#dc2626")
-      .style("font-weight", "600")
-      .text(`Filtré: ${totalFiltered} étudiants`);
-    
-    legend.append("text")
-      .attr("x", 0)
-      .attr("y", 58)
-      .style("font-size", "10px")
-      .style("fill", "#dc2626")
-      .text(`${depressedFiltered} avec dépression`);
-  }
-}
-
 function showHistTooltip(event, d, depressionStatus) {
   const t = ensureTooltip();
   const status = depressionStatus === 1 ? "Avec dépression" : "Sans dépression";
@@ -1192,7 +1183,7 @@ function showHistTooltip(event, d, depressionStatus) {
   
   const filterInfo = currentHeatmapCell ? 
     `<p style="margin:4px 0;font-size:11px;color:#dc2626;font-weight:600">
-      🔍 Données filtrées par la heatmap
+      🔴 Données filtrées par la heatmap
     </p>` : "";
   
   t.html(`
@@ -1206,8 +1197,18 @@ function showHistTooltip(event, d, depressionStatus) {
   moveTooltip(event);
 }
 
+function moveTooltip(event) {
+  const t = ensureTooltip();
+  t.style("left", (event.pageX + 15) + "px")
+    .style("top", (event.pageY - 15) + "px");
+}
+
+function hideTooltip() {
+  ensureTooltip().style("display", "none");
+}
+
 // -------------------------
-// DÉMARRAGE DE L'APPLICATION
+// DÉMARRAGE
 // -------------------------
 document.addEventListener("DOMContentLoaded", initInteractions);
 
@@ -1217,6 +1218,8 @@ window.interactions = {
   get filteredData() { return filteredData; },
   get currentState() { return currentState; },
   get currentHeatmapCell() { return currentHeatmapCell; },
+  get animationEnabled() { return animationEnabled; },
+  set animationEnabled(value) { animationEnabled = value; },
   renderHeatmap,
   renderBarChart,
   renderHistogram,
