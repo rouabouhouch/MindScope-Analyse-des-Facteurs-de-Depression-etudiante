@@ -1034,3 +1034,72 @@
     color: white;
 }
 
+/* ===== FIXED DASHBOARD BEHAVIOR ===== */
+
+.charts-workspace {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 22px;
+    padding: 20px 10px 40px 10px;
+
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+/* Let cards actually breathe */
+.charts-workspace .chart-card.fixed {
+    flex: 1 1 620px;
+    min-width: 560px;
+    max-width: 900px;
+
+    height: auto;
+    min-height: 560px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/* Card content must be scrollable */
+.charts-workspace .chart-card.fixed .chart-container,
+.charts-workspace .charts-workspace .bubble-chart,
+.charts-workspace .charts-workspace .small-chart,
+.charts-workspace .charts-workspace .outliers-container {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+/* Stop headers and footers from shrinking */
+.charts-workspace .card-header,
+.charts-workspace .chart-footer {
+    flex-shrink: 0;
+}
+
+/* ===== RADAR CARD FIX ===== */
+
+/* Allow chart cards to expand based on real content */
+.charts-workspace .chart-card.fixed {
+    height: auto;
+    min-height: 600px;
+}
+
+/* The radar container must be allowed to grow */
+#profile-radar {
+    flex: 1 1 auto;
+    min-height: 480px;
+    overflow: visible;
+}
+
+/* SVG inside radar must never be clipped */
+#profile-radar svg,
+.radar-svg {
+    width: 100%;
+    height: auto !important;
+    min-height: 480px;
+}
+
+/* Prevent flex from collapsing inner content */
+.charts-workspace .chart-card.fixed > * {
+    min-height: 0;
+}
