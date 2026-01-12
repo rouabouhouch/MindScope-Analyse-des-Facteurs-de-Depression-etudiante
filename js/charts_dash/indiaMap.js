@@ -82,14 +82,13 @@ async function initIndiaMap() {
             .style('fill', '#1e293b')
             .style('font-weight', '600')
             .style('text-shadow', '1px 1px 2px white')
-            .text('🇮🇳 États de l\'Inde');
+            .text('     ');
 
         CommentButton.attach({
         container: document
             .getElementById('us-map') // ou '#india-map' si tu changes l'id
             .closest('.chart-card'),   // container parent de la carte
         content: `
-                <strong>🇮🇳 États de l'Inde</strong><br/><br/>
                 Cette carte montre les états indiens et leur métrique sélectionnée
                 (dépression, CGPA, satisfaction ou nombre d'étudiants).<br/><br/>
                 Les valeurs sont mises à jour dynamiquement selon les filtres appliqués.
@@ -518,10 +517,10 @@ function showStateTooltip(event, stateFeature, stats) {
                     
                     <div style="font-size: 11px; color: #64748b; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e2e8f0;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px;">
-                            <div>📊 CGPA: <strong>${stats.avgCGPA ? stats.avgCGPA.toFixed(2) : 'N/A'}</strong></div>
-                            <div>😊 Satisfaction: <strong>${stats.avgSatisfaction ? stats.avgSatisfaction.toFixed(1) : 'N/A'}/5</strong></div>
-                            <div>😔 Dépression: <strong>${stats.depressionRate ? (stats.depressionRate * 100).toFixed(1) : '0'}%</strong></div>
-                            <div>😴 Sommeil: <strong>${stats.avgSleep ? stats.avgSleep.toFixed(1) : 'N/A'}/5</strong></div>
+                            <div><i class="fas fa-chart-bar" style="margin-right:6px"></i> CGPA: <strong>${stats.avgCGPA ? stats.avgCGPA.toFixed(2) : 'N/A'}</strong></div>
+                            <div><i class="fas fa-smile" style="margin-right:6px"></i> Satisfaction: <strong>${stats.avgSatisfaction ? stats.avgSatisfaction.toFixed(1) : 'N/A'}/5</strong></div>
+                            <div><i class="fas fa-frown" style="margin-right:6px"></i> Dépression: <strong>${stats.depressionRate ? (stats.depressionRate * 100).toFixed(1) : '0'}%</strong></div>
+                            <div><i class="fas fa-bed" style="margin-right:6px"></i> Sommeil: <strong>${stats.avgSleep ? stats.avgSleep.toFixed(1) : 'N/A'}/5</strong></div>
                         </div>
                         <div style="font-size: 10px; color: #94a3b8; margin-top: 4px;">
                             ${extraInfo}
@@ -531,13 +530,13 @@ function showStateTooltip(event, stateFeature, stats) {
                 ` : `
                 <div style="background: #fef2f2; padding: 12px; border-radius: 8px; margin-bottom: 10px; text-align: center;">
                     <div style="color: #dc2626; font-size: 13px;">
-                        ⚠️ Aucun étudiant de cet état
+                        <i class="fas fa-exclamation-triangle" style="margin-right:6px"></i>Aucun étudiant de cet état
                     </div>
                 </div>
                 `}
                 
                 <div style="font-size: 11px; color: #64748b; text-align: center; padding: 6px; background: #f1f5f9; border-radius: 6px;">
-                    👆 Cliquer pour filtrer cet état
+                    <i class="fas fa-hand-point-up" style="margin-right:6px"></i>Cliquer pour filtrer cet état
                 </div>
             </div>
         `);
@@ -666,11 +665,11 @@ function getLegendColors() {
 
 function getLegendTitle() {
     switch(selectedMetric) {
-        case 'depression': return '😔 Taux de Dépression';
-        case 'cgpa': return '📊 CGPA Moyen';
-        case 'satisfaction': return '😊 Satisfaction';
-        case 'count': return '👥 Nombre d\'Étudiants';
-        default: return '📈 Métrique';
+        case 'depression': return 'Taux de Dépression';
+        case 'cgpa': return 'CGPA Moyen';
+        case 'satisfaction': return 'Satisfaction';
+        case 'count': return 'Nombre d\'Étudiants';
+        default: return 'Métrique';
     }
 }
 

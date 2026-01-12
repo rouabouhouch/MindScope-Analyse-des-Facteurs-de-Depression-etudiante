@@ -17,25 +17,7 @@ function initCityTable() {
         });
     }
 
-    CommentButton.attach({
-        container: document
-            .getElementById('city-table')
-            .closest('.chart-card'),
-        content: `
-            Ce tableau présente :
-        <ul style="margin: 6px 0 0 16px;">
-            <li>le nombre d'étudiants par ville</li>
-            <li>la satisfaction moyenne</li>
-            <li>le CGPA moyen</li>
-            <li>le taux de dépression</li>
-        </ul>
-        <br/>
-        Cliquez sur une ligne pour filtrer par ville.
-        `,
-        position: 'top-right',
-        topOffset: 108,
-        rightOffset: 1908
-    });
+
     
     cityTableInitialized = true;
 }
@@ -100,11 +82,23 @@ function renderCityTable(data, totals) {
         <tr>
             <th>Ville</th>
             <th>Nb Étudiants</th>
-            <th>Satisfaction Étude (moy)</th>
+            <th>Satisfaction (moy)</th>
             <th>CGPA (moy)</th>
             <th>Taux Dépression</th>
         </tr>
     `;
+    // Style header cells for a cleaner look
+    thead.querySelectorAll('th').forEach((th, i, list) => {
+        th.style.background = '#f8fafc';
+        th.style.padding = '8px 10px';
+        th.style.fontSize = '12px';
+        th.style.color = '#475569';
+        th.style.fontWeight = '700';
+        th.style.borderBottom = '2px solid #e2e8f0';
+        if (i === 0) th.style.borderTopLeftRadius = '6px';
+        if (i === list.length - 1) th.style.borderTopRightRadius = '6px';
+        th.style.textAlign = 'left';
+    });
     table.appendChild(thead);
     
     // Corps
@@ -113,13 +107,12 @@ function renderCityTable(data, totals) {
         const tr = document.createElement('tr');
         tr.style.cursor = 'pointer';
         tr.onclick = () => handleSelection('city', row.city);
-        
         tr.innerHTML = `
-            <td>${row.city}</td>
-            <td>${row.count}</td>
-            <td>${row.avgSatisfaction.toFixed(2)}</td>
-            <td>${row.avgCGPA.toFixed(2)}</td>
-            <td>${(row.depressionRate * 100).toFixed(1)}%</td>
+            <td style="padding:8px 10px;">${row.city}</td>
+            <td style="padding:8px 10px;">${row.count}</td>
+            <td style="padding:8px 10px;">${row.avgSatisfaction.toFixed(2)}</td>
+            <td style="padding:8px 10px;">${row.avgCGPA.toFixed(2)}</td>
+            <td style="padding:8px 10px;">${(row.depressionRate * 100).toFixed(1)}%</td>
         `;
         
         tr.onmouseenter = function() {
@@ -138,15 +131,21 @@ function renderCityTable(data, totals) {
     const tfoot = document.createElement('tfoot');
     tfoot.innerHTML = `
         <tr>
-            <td><strong>${totals.city}</strong></td>
-            <td><strong>${totals.count}</strong></td>
-            <td><strong>${totals.avgSatisfaction.toFixed(2)}</strong></td>
-            <td><strong>${totals.avgCGPA.toFixed(2)}</strong></td>
-            <td><strong>${(totals.depressionRate * 100).toFixed(1)}%</strong></td>
+            <td style="padding:8px 10px;"><strong>${totals.city}</strong></td>
+            <td style="padding:8px 10px;"><strong>${totals.count}</strong></td>
+            <td style="padding:8px 10px;"><strong>${totals.avgSatisfaction.toFixed(2)}</strong></td>
+            <td style="padding:8px 10px;"><strong>${totals.avgCGPA.toFixed(2)}</strong></td>
+            <td style="padding:8px 10px;"><strong>${(totals.depressionRate * 100).toFixed(1)}%</strong></td>
         </tr>
     `;
     table.appendChild(tfoot);
     
+    // Table base styles
+    table.style.width = '100%';
+    table.style.borderCollapse = 'collapse';
+    table.style.fontSize = '12px';
+    table.style.color = '#475569';
+
     container.appendChild(table);
 }
 

@@ -23,7 +23,7 @@ function initRadarChart() {
      CommentButton.attach({
         container: document.querySelector('#radar-chart').closest('.chart-card'),
         content: `
-            <strong>📡 Profil radar</strong><br/><br/>
+            <strong> Profil radar</strong><br/><br/>
             Ce graphique compare plusieurs dimensions
             du bien-être étudiant (pression académique,
             sommeil, stress financier, etc.).<br/><br/>
@@ -208,9 +208,9 @@ function updateRadarChart() {
         .style('font-size', '12px')
         .style('fill', '#475569');
     
-    let titleText = 'Profil moyen';
-    if (radarType === 'depressed') titleText += ' (Déprimés)';
-    else if (radarType === 'not_depressed') titleText += ' (Non déprimés)';
+    let titleText = '';
+    if (radarType === 'depressed') titleText += '';
+    else if (radarType === 'not_depressed') titleText += '';
     
     title.text(titleText);
 }

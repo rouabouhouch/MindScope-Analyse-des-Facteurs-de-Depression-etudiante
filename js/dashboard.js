@@ -171,7 +171,12 @@ function setupFilterEvents() {
             if (cityFilter) cityFilter.value = 'all';
             if (degreeFilter) degreeFilter.value = 'all';
             if (depressionFilter) depressionFilter.value = 'all';
-            
+
+            // Reset pie selection (if present) so colors/content return to default
+            if (typeof window.resetPieSelection === 'function') {
+                try { window.resetPieSelection(); } catch (e) { console.warn('resetPieSelection failed', e); }
+            }
+
             applyFilters();
         });
     }
@@ -280,10 +285,15 @@ function handleSelection(type, data) {
         if (cityFilter) cityFilter.value = data;
         applyFilters();
     } else if (type === 'depression') {
-        dashboardState.filters.depression = data ? 'depressed' : 'not_depressed';
+        // data === null => clear selection => set to 'all'
+        if (data === null || typeof data === 'undefined') {
+            dashboardState.filters.depression = 'all';
+        } else {
+            dashboardState.filters.depression = data ? 'depressed' : 'not_depressed';
+        }
         const depressionFilter = document.getElementById('depressionFilter');
         if (depressionFilter) {
-            depressionFilter.value = data ? 'depressed' : 'not_depressed';
+            depressionFilter.value = dashboardState.filters.depression;
         }
         applyFilters();
     } else if (type === 'gender') {

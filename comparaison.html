@@ -8,6 +8,8 @@
   <link rel="stylesheet" href="css/style_dash.css" />
   <link rel="stylesheet" href="css/interactions.css" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for icons (replaces emojis) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
@@ -23,32 +25,32 @@
       </div>
 
       <nav class="menu">
-        <a href="index.html" class="menu-item"><span>📊</span> Vue d'ensemble</a>
-        <a href="profils.html" class="menu-item"><span>👥</span> Profils</a>
-        <a href="comparaison.html" class="menu-item"><span>⚖️</span> Comparaisons</a>
+        <a href="index.html" class="menu-item"><i class="fas fa-chart-bar" aria-hidden="true"></i>&nbsp;Vue d'ensemble</a>
+        <a href="profils.html" class="menu-item"><i class="fas fa-users" aria-hidden="true"></i>&nbsp;Profils</a>
+        <a href="comparaison.html" class="menu-item"><i class="fas fa-balance-scale" aria-hidden="true"></i>&nbsp;Comparaisons</a>
       </nav>
 
       <div class="filters-section">
         <h3>FACTEURS D'INTERACTION</h3>
 
         <div class="filter-group">
-          <label>📈 Facteur X</label>
+          <label><i class="fas fa-chart-line" aria-hidden="true"></i>&nbsp;Facteur X</label>
           <select id="factor-x"></select>
         </div>
 
         <div class="filter-group">
-          <label>📉 Facteur Y</label>
+          <label><i class="fas fa-chart-bar" aria-hidden="true"></i>&nbsp;Facteur Y</label>
           <select id="factor-y"></select>
         </div>
 
         <div class="filter-group">
-          <label>⚡ Seuil Critique</label>
+          <label><i class="fas fa-bolt" aria-hidden="true"></i>&nbsp;Seuil Critique</label>
           <input type="range" id="risk-threshold" min="10" max="90" step="5" value="50">
           <div class="threshold-display" id="threshold-value">50%</div>
         </div>
 
-        <button id="analyze-btn" class="reset-btn">🔍 Analyser Interactions</button>
-        <button id="reset-btn" class="reset-btn">🔄 Réinitialiser</button>
+        <button id="analyze-btn" class="reset-btn"><i class="fas fa-search" aria-hidden="true"></i>&nbsp;Analyser Interactions</button>
+        <button id="reset-btn" class="reset-btn"><i class="fas fa-sync-alt" aria-hidden="true"></i>&nbsp;Réinitialiser</button>
       </div>
 
       <div class="sidebar-stats">
@@ -74,7 +76,7 @@
       <!-- Heatmap Interactive -->
       <div class="chart-card full-width">
         <div class="card-header">
-          <h3>📊 Heatmap Interactive des Interactions</h3>
+          <h3><i class="fas fa-chart-pie" aria-hidden="true"></i>&nbsp;Heatmap Interactive des Interactions</h3>
           <div class="chart-controls">
             <div class="btn" id="refresh-heatmap">🔄 Actualiser</div>
           </div>
@@ -94,7 +96,7 @@
         <!-- Simulateur -->
         <div class="chart-card">
           <div class="card-header">
-            <h3>🧪 Simulateur de Risque</h3>
+            <h3><i class="fas fa-flask" aria-hidden="true"></i>&nbsp;Simulateur de Risque</h3>
           </div>
 
           <div class="simulator">
@@ -128,12 +130,12 @@
         <!-- Insights -->
         <div class="chart-card">
           <div class="card-header">
-            <h3>💡 Insights Automatiques</h3>
+            <h3><i class="fas fa-lightbulb" aria-hidden="true"></i>&nbsp;Insights Automatiques</h3>
           </div>
 
           <div class="insights-grid">
             <div class="insight-item">
-              <div class="insight-icon danger">⚠️</div>
+              <div class="insight-icon danger"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></div>
               <div class="insight-text">
                 <h4>Combinaisons Dangereuses</h4>
                 <p id="danger-combinations">Analyse en cours...</p>
@@ -141,7 +143,7 @@
             </div>
 
             <div class="insight-item">
-              <div class="insight-icon safe">🛡️</div>
+              <div class="insight-icon safe"><i class="fas fa-shield-alt" aria-hidden="true"></i></div>
               <div class="insight-text">
                 <h4>Combinaisons Sûres</h4>
                 <p id="safe-combinations">Analyse en cours...</p>
@@ -149,7 +151,7 @@
             </div>
 
             <div class="insight-item">
-              <div class="insight-icon threshold">⚡</div>
+              <div class="insight-icon threshold"><i class="fas fa-bolt" aria-hidden="true"></i></div>
               <div class="insight-text">
                 <h4>Seuils Critiques</h4>
                 <p id="thresholds-text">Analyse en cours...</p>
@@ -164,7 +166,7 @@
         <!-- Bar chart -->
         <div class="chart-card">
           <div class="card-header">
-            <h3>📌 Taux de dépression par catégorie</h3>
+            <h3><i class="fas fa-thumbtack" aria-hidden="true"></i>&nbsp;Taux de dépression par catégorie</h3>
             <div class="chart-controls">
               <select id="group-by"></select>
             </div>
@@ -175,7 +177,7 @@
         <!-- Histogram -->
         <div class="chart-card">
           <div class="card-header">
-            <h3>📈 Distribution (numérique) vs Dépression</h3>
+            <h3><i class="fas fa-chart-line" aria-hidden="true"></i>&nbsp;Distribution (numérique) vs Dépression</h3>
             <div class="chart-controls">
               <select id="numeric-var"></select>
             </div>
