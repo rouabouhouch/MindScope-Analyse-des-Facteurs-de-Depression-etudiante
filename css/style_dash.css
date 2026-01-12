@@ -21,6 +21,65 @@ body {
     color: var(--text-main);
     height: 100vh;
     overflow: hidden;
+    /* ===== ADJUST TOP ROW: enlarge Pie + Radar, shrink Table ===== */
+    /* Target the three items inside `.charts-grid.triple`: 1=pie, 2=radar, 3=table */
+    .charts-grid.triple .chart-card.compact:nth-child(1),
+    .charts-grid.triple .chart-card.compact:nth-child(2) {
+        /* Give pie and radar more vertical space */
+        min-height: 430px !important;
+        max-height: 820px !important;
+        padding: 1rem !important;
+    }
+
+    .charts-grid.triple .chart-card.compact:nth-child(1) .chart-container.small,
+    .charts-grid.triple .chart-card.compact:nth-child(2) .chart-container.small {
+        height: 360px !important;
+        min-height: 300px !important;
+        max-height: 420px !important;
+    }
+
+    /* Make the city table in the third column more compact to reclaim space */
+    .charts-grid.triple .chart-card.compact:nth-child(3) .table-container.compact-table {
+        height: 220px !important;
+        /* max-height: 260px !important; */
+        min-height: 200px !important;
+        overflow-y: auto !important;
+    }
+
+    /* Responsive adjustments: scale down proportions on medium/small screens */
+    @media (max-width: 1200px) {
+        .charts-grid.triple .chart-card.compact:nth-child(1),
+        .charts-grid.triple .chart-card.compact:nth-child(2) {
+            min-height: 360px !important;
+        }
+        .charts-grid.triple .chart-card.compact:nth-child(1) .chart-container.small,
+        .charts-grid.triple .chart-card.compact:nth-child(2) .chart-container.small {
+            height: 300px !important;
+            min-height: 260px !important;
+            max-height: 340px !important;
+        }
+        .charts-grid.triple .chart-card.compact:nth-child(3) .table-container.compact-table {
+            height: 200px !important;
+            max-height: 240px !important;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .charts-grid.triple .chart-card.compact:nth-child(1),
+        .charts-grid.triple .chart-card.compact:nth-child(2) {
+            min-height: 300px !important;
+            max-height: 420px !important;
+        }
+        .charts-grid.triple .chart-card.compact:nth-child(1) .chart-container.small,
+        .charts-grid.triple .chart-card.compact:nth-child(2) .chart-container.small {
+            height: 240px !important;
+            min-height: 200px !important;
+        }
+        .charts-grid.triple .chart-card.compact:nth-child(3) .table-container.compact-table {
+            height: 160px !important;
+            max-height: 200px !important; 
+        }
+    }
 }
 
 /* Dashboard Container ultra compact */
@@ -764,7 +823,7 @@ body {
 /* ===== ENLARGE CHARTS FOR BETTER VISIBILITY ===== */
 .chart-card.compact {
     min-height: 350px !important;   /* bigger chart card */
-    max-height: 450px !important;   /* allow more room */
+    max-height: 750px !important;   /* allow more room */
     padding: 1rem !important;       /* more space inside */
 }
 
@@ -772,6 +831,22 @@ body {
     height: 320px !important;       /* taller chart area */
     min-height: 300px !important;
     max-height: 360px !important;
+}
+
+/* Make only the multi-bar chart card taller when it has the `tall` class */
+.chart-card.compact.tall {
+    /* Increased heights so full chart + legends are visible */
+    min-height: 520px !important;
+    max-height: 920px !important;
+    padding: 1.25rem !important;
+}
+
+.chart-card.tall .chart-container.small,
+.chart-card.compact.tall .chart-container.small {
+    /* Make inner chart area taller to ensure axes, labels and legends fit */
+    height: 700px !important;
+    min-height: 640px !important;
+    max-height: 780px !important;
 }
 
 .tick text,
@@ -866,7 +941,7 @@ body {
 /* Make city table chart card fill its area */
 #city-table {
     width: 100% !important;
-    height: 100% !important;   /* fill the chart-card */
+     height: 343px !important;  
     display: block;
 }
 
@@ -979,4 +1054,9 @@ body {
     margin: 0; /* Reset margins */
     padding: 10px 0; /* Add padding for better spacing */
     color: var(--text-main);
+}
+
+#depression-pie path:active,
+#depression-pie path:focus {
+    fill: inherit !important;
 }

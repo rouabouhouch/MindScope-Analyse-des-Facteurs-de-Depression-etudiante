@@ -208,7 +208,7 @@ function updateRadarChart() {
         .style('font-size', '12px')
         .style('fill', '#475569');
     
-    let titleText = 'Profil moyen';
+    let titleText = '';
     if (radarType === 'depressed') titleText += ' (Déprimés)';
     else if (radarType === 'not_depressed') titleText += ' (Non déprimés)';
     
