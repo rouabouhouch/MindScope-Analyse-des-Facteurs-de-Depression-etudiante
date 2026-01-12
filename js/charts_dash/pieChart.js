@@ -49,8 +49,11 @@ function initPieChart() {
             container: document
                 .querySelector('#depression-pie')
                 .closest('.chart-card'),
+            // push the button further up for this chart so it doesn't overlap the legend
+            bottomOffset: 60,
+            leftOffset: 12,
             content: `
-                <strong>📊 Distribution de la dépression</strong><br/><br/>
+                <strong>Distribution de la dépression</strong><br/><br/>
                 Ce graphique montre la répartition des étudiants
                 selon leur statut de dépression.<br/><br/>
                 Les valeurs sont recalculées dynamiquement
@@ -195,51 +198,51 @@ function updatePieChart() {
             return `${percentage}%`;
         });
     
-    // Ajouter un centre avec informations
-    const centerGroup = pieChart.svg.append('g')
-        .attr('text-anchor', 'middle');
+    // // Ajouter un centre avec informations
+    // const centerGroup = pieChart.svg.append('g')
+    //     .attr('text-anchor', 'middle');
     
-    if (!selectedCategory) {
-        // Mode normal : afficher le total
-        centerGroup.append('text')
-            .attr('dy', '0.35em')
-            .style('font-size', '18px')
-            .style('fill', '#1e293b')
-            .style('font-weight', '700')
-            .text(stats.total);
+    // if (!selectedCategory) {
+    //     // Mode normal : afficher le total
+    //     centerGroup.append('text')
+    //         .attr('dy', '0.35em')
+    //         .style('font-size', '18px')
+    //         .style('fill', '#1e293b')
+    //         .style('font-weight', '700')
+    //         .text(stats.total);
             
-        centerGroup.append('text')
-            .attr('dy', '1.5em')
-            .style('font-size', '12px')
-            .style('fill', '#64748b')
-            .style('font-weight', '500')
-            .text('étudiants');
-    } else {
-        // Mode sélectionné : afficher les détails de la sélection
-        const selectedData = pieData.find(d => d.label === selectedCategory);
-        if (selectedData) {
-            centerGroup.append('text')
-                .attr('dy', '-0.8em')
-                .style('font-size', '14px')
-                .style('fill', selectedData.color)
-                .style('font-weight', '700')
-                .text(selectedData.label);
+    //     centerGroup.append('text')
+    //         .attr('dy', '1.5em')
+    //         .style('font-size', '12px')
+    //         .style('fill', '#64748b')
+    //         .style('font-weight', '500')
+    //         .text('étudiants');
+    // } else {
+    //     // Mode sélectionné : afficher les détails de la sélection
+    //     const selectedData = pieData.find(d => d.label === selectedCategory);
+    //     if (selectedData) {
+    //         centerGroup.append('text')
+    //             .attr('dy', '-0.8em')
+    //             .style('font-size', '14px')
+    //             .style('fill', selectedData.color)
+    //             .style('font-weight', '700')
+    //             .text(selectedData.label);
                 
-            centerGroup.append('text')
-                .attr('dy', '0.8em')
-                .style('font-size', '20px')
-                .style('fill', '#1e293b')
-                .style('font-weight', '700')
-                .text(selectedData.value);
+    //         centerGroup.append('text')
+    //             .attr('dy', '0.8em')
+    //             .style('font-size', '20px')
+    //             .style('fill', '#1e293b')
+    //             .style('font-weight', '700')
+    //             .text(selectedData.value);
                 
-            centerGroup.append('text')
-                .attr('dy', '2.2em')
-                .style('font-size', '11px')
-                .style('fill', '#64748b')
-                .style('font-weight', '500')
-                .text(`(${((selectedData.value / stats.total) * 100).toFixed(1)}%)`);
-        }
-    }
+    //         centerGroup.append('text')
+    //             .attr('dy', '2.2em')
+    //             .style('font-size', '11px')
+    //             .style('fill', '#64748b')
+    //             .style('font-weight', '500')
+    //             .text(`(${((selectedData.value / stats.total) * 100).toFixed(1)}%)`);
+    //     }
+    // }
     
     // Mettre à jour la légende
     updatePieLegend(pieData, stats);

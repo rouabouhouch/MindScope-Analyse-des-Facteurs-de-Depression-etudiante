@@ -1,6 +1,5 @@
 // js/charts_dash/multiBarChart.js
-// Bar chart multivarié interactif - Version Professionnelle
-
+// Bar chart multivarié interactif 
 let barChartInitialized = false;
 let barChart = null;
 let groupBy = 'depression';
@@ -42,6 +41,27 @@ function initMultiBarChart() {
     // Événements de contrôle améliorés
     setupEnhancedControls();
     
+    // AJOUT : Bouton de description
+    if (typeof CommentButton !== 'undefined') {
+        CommentButton.attach({
+            container: document
+                .querySelector('#multi-bar-chart')
+                .closest('.chart-card'),
+            position: 'bottom-left',
+            bottomOffset: 12,
+            leftOffset: 12,
+            content: `
+                <strong>Analyse des Facteurs de Risque</strong>
+                <div style="margin-top:6px; font-size:12px; color:#64748b;">
+                    Ce graphique compare plusieurs facteurs (pression académique, sommeil,
+                    habitudes alimentaires, stress financier) entre groupes.
+                </div>
+                <br/>
+                <div style="font-size:12px; color:#64748b;">Cliquez sur une barre pour filtrer le tableau.</div>
+            `
+        });
+    }
+    
     barChartInitialized = true;
 }
 
@@ -68,8 +88,8 @@ function setupEnhancedControls() {
         toggleBtn.addEventListener('click', function() {
             isStacked = !isStacked;
             this.innerHTML = isStacked ? 
-                '<span>📊</span> Vue groupée' : 
-                '<span>📈</span> Vue empilée';
+                '<i class="fas fa-chart-bar" aria-hidden="true" style="margin-right:6px"></i> Vue groupée' : 
+                '<i class="fas fa-chart-line" aria-hidden="true" style="margin-right:6px"></i> Vue empilée';
             this.classList.toggle('active', isStacked);
             updateMultiBarChart();
         });
@@ -528,7 +548,7 @@ function showEnhancedTooltip(event, data) {
                     </div>
                     ` : ''}
                     <div class="tooltip-actions" style="text-align: center; font-size: 11px; color: #94a3b8; padding-top: 8px; border-top: 1px solid #e2e8f0;">
-                        👆 Cliquer pour filtrer ce groupe
+                        <i class="fas fa-hand-point-up" style="margin-right:6px"></i>Cliquer pour filtrer ce groupe
                     </div>
                 </div>
             </div>
@@ -762,7 +782,7 @@ function displayNoDataMessage() {
         .style('font-size', '16px')
         .style('fill', '#94a3b8')
         .style('font-weight', '500')
-        .text('📊');
+        .text('');
     
     barChart.svg.append('text')
         .attr('x', barChart.width / 2)

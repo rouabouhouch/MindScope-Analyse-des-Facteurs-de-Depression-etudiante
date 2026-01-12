@@ -10,10 +10,10 @@
 
   async function generateReport() {
     const btn = document.getElementById('generate-report');
-    const overlay = document.getElementById('loading-overlay');
     if (!btn) return;
+    const originalText = btn.textContent;
     btn.disabled = true;
-    if (overlay) overlay.style.display = 'flex';
+    btn.textContent = 'Génération...';
 
     try {
       // Element to export: main content (remove sidebar to keep PDF focused)
@@ -28,14 +28,26 @@
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
       };
 
+      // Ensure loading overlay is hidden during capture so it doesn't appear in PDF
+      const overlay = document.getElementById('loading-overlay');
+      const prevOverlayDisplay = overlay ? overlay.style.display : null;
+      if (overlay) overlay.style.display = 'none';
+      // allow the browser one frame to repaint
+      await new Promise(r => requestAnimationFrame(r));
+
       // Wait for html2pdf to finish saving
       await html2pdf().set(opt).from(element).save();
+
+      // restore overlay display state
+      if (overlay) overlay.style.display = prevOverlayDisplay;
     } catch (err) {
       console.error('Erreur génération PDF:', err);
       alert('Erreur lors de la génération du PDF: ' + (err.message || err));
     } finally {
-      if (overlay) overlay.style.display = 'none';
-      if (btn) btn.disabled = false;
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
     }
   }
 

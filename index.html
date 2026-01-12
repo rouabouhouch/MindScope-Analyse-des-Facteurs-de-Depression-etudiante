@@ -6,6 +6,8 @@
     <title>Lumina | Analytics Santé Mentale - Dashboard</title>
     <link rel="stylesheet" href="css/style_dash.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons (replaces emojis) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <!-- CDN externes -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -21,16 +23,16 @@
                 <h2>LUMINA</h2>
             </div>
             <nav class="menu">
-                <a href="index.html" class="menu-item active"><span>📊</span> Vue d'ensemble</a>
-                <a href="profils.html" class="menu-item"><span>👥</span> Profils</a>
-                <a href="comparaison.html" class="menu-item"><span>⚖️</span> Comparaisons</a>
+                <a href="index.html" class="menu-item active"><i class="fas fa-chart-bar" aria-hidden="true"></i>&nbsp;Vue d'ensemble</a>
+                <a href="profils.html" class="menu-item"><i class="fas fa-users" aria-hidden="true"></i>&nbsp;Profils</a>
+                <a href="comparaison.html" class="menu-item"><i class="fas fa-balance-scale" aria-hidden="true"></i>&nbsp;Comparaisons</a>
             </nav>
             
             <div class="filters-section">
                 <h3>FILTRES INTERACTIFS</h3>
                 
                 <div class="filter-group">
-                    <label>👤 Genre</label>
+                    <label><i class="fas fa-user" aria-hidden="true"></i>&nbsp;Genre</label>
                     <select id="genderFilter">
                         <option value="all">Tous</option>
                         <option value="Male">Homme</option>
@@ -47,7 +49,7 @@
                 </div>
                 
                 <div class="filter-group">
-                    <label>🎓 Niveau d'Étude</label>
+                    <label><i class="fas fa-graduation-cap" aria-hidden="true"></i>&nbsp;Niveau d'Étude</label>
                     <select id="degreeFilter">
                         <option value="all">Tous</option>
                         <option value="Bachelor">Bachelor</option>
@@ -68,7 +70,7 @@
                 <button id="reset-filters" class="reset-btn">Réinitialiser Filtres</button>
             </div>
             
-            <div class="sidebar-stats">
+            <!-- <div class="sidebar-stats">
                 <h3>STATISTIQUES GLOBALES</h3>
                 <div class="stat-item">
                     <span class="stat-label">Étudiants</span>
@@ -82,7 +84,7 @@
                     <span class="stat-label">Moyenne CGPA</span>
                     <span class="stat-value" id="avg-cgpa">0.0</span>
                 </div>
-            </div>
+            </div> -->
         </aside>
 
         <!-- Main Content -->
@@ -122,13 +124,13 @@
                 <div class="chart-card compact">
                     <div class="card-header">
                         <h3>Distribution de la Dépression</h3>
-                        <div class="chart-controls">
+                        <!-- <div class="chart-controls">
                             <select id="pie-display">
                                 <option value="percentage">Pourcentages</option>
                                 <option value="count">Nombres absolus</option>
                             </select>
-                            <button id="export-pie" class="export-btn small">📥</button>
-                        </div>
+                            <button id="export-pie" class="export-btn small"><i class="fas fa-download" aria-hidden="true"></i></button>
+                        </div> -->
                     </div>
                     <div id="depression-pie" class="chart-container small"></div>
                     <div class="chart-footer">
@@ -192,7 +194,7 @@
                 <!-- 5. Carte de l'Inde -->
                 <div class="chart-card compact">
                     <div class="card-header">
-                        <h3>Distribution Géographique</h3>
+                        <h3>Distribution Géographique (Inde)</h3>
                         <div class="chart-controls">
                             <select id="map-metric">
                                 <option value="depression">Taux de Dépression</option>
@@ -224,21 +226,21 @@
                 </div>
                 <div id="insights-container" class="insights-container compact">
                     <div class="insight-card compact">
-                        <div class="insight-icon">📊</div>
+                        <div class="insight-icon"><i class="fas fa-chart-pie" aria-hidden="true"></i></div>
                         <div class="insight-content">
                             <h4>Corrélations Clés</h4>
                             <p id="correlation-text">Chargement des corrélations...</p>
                         </div>
                     </div>
                     <div class="insight-card compact">
-                        <div class="insight-icon">⚠️</div>
+                        <div class="insight-icon"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></div>
                         <div class="insight-content">
                             <h4>Risques Identifiés</h4>
                             <p id="risk-text">Analyse des risques en cours...</p>
                         </div>
                     </div>
                     <div class="insight-card compact">
-                        <div class="insight-icon">🎯</div>
+                        <div class="insight-icon"><i class="fas fa-bullseye" aria-hidden="true"></i></div>
                         <div class="insight-content">
                             <h4>Recommandations</h4>
                             <p id="recommendation-text">Génération des recommandations...</p>
@@ -250,8 +252,7 @@
             <!-- SECTION: Export et Rapport -->
             <div class="chart-footer full-width compact">
                 <div class="export-options compact">
-                    <button id="export-dashboard" class="action-btn small">Exporter Dashboard Complet</button>
-                    <button id="generate-report" class="action-btn small">Générer Rapport PDF</button>
+                    <button id="generate-report" class="action-btn small">Exporter Dashboard Complet</button>
                     <!-- <button id="share-insights" class="action-btn small">Partager Insights</button> -->
                 </div>
             </div>

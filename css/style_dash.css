@@ -726,16 +726,21 @@ body {
 }
 
 .loading-spinner {
-    width: 30px;
-    height: 30px;
-    border: 2px solid #e2e8f0;
-    border-top-color: #4f46e5;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    font-size: 0.75rem !important;
+
 }
 
-@keyframes spin {
+.filter-group select option {
+    background: var(--sidebar-dark);
+    color: white;
     to { transform: rotate(360deg); }
 }
 
@@ -1060,3 +1065,42 @@ body {
 #depression-pie path:focus {
     fill: inherit !important;
 }
+
+/* Comment button / help box styling */
+.comment-button {
+    position: absolute; /* set via JS too, but ensure visual defaults */
+    z-index: 30;
+    background: #0b1220;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+    cursor: pointer;
+}
+
+.comment-button i {
+    pointer-events: none;
+}
+
+.comment-box {
+    position: absolute;
+    z-index: 30;
+    background: #ffffff;
+    border: 1px solid #e6eef6;
+    border-radius: 8px;
+    padding: 10px;
+    width: 240px;
+    box-shadow: 0 6px 18px rgba(15,23,42,0.08);
+    font-size: 13px;
+    display: none;
+}
+
+/* Slightly increase bottom padding inside chart cards so circular button doesn't overlap content */
+.chart-card.compact { padding-bottom: 1.25rem !important; }

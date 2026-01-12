@@ -12,32 +12,42 @@
         const button = root.append('button')
             .attr('class', 'comment-button')
             .style('position', 'absolute')
-            .style('z-index', '20')
-            .style('background', '#000000ff')
+            .style('z-index', '30')
+            .style('background', '#0b1220')
             .style('color', 'white')
             .style('border', 'none')
-            .style('border-radius', '4px')
-            .style('padding', '4px 8px')
+            .style('border-radius', '50%')
+            .style('width', '34px')
+            .style('height', '34px')
+            .style('display', 'flex')
+            .style('align-items', 'center')
+            .style('justify-content', 'center')
+            .style('padding', '0')
             .style('cursor', 'pointer')
             .style('font-size', '14px')
-            .text('💬');
+            .style('box-shadow', '0 2px 6px rgba(0,0,0,0.18)')
+            .attr('title', 'Description')
+            .html('<i class="fas fa-comment-dots" aria-hidden="true"></i>');
+
+        // Décalage vertical positif pour garder le bouton à l'intérieur des cartes
+        const verticalOffset = 14; // px: increases bottom offset so button sits inside the card
 
         // Position par défaut : bas gauche
         switch(position) {
             case 'top-right':
-                button.style('top', (topOffset !== undefined ? topOffset : 8) + 'px')
+                button.style('top', ((topOffset !== undefined ? topOffset : 8) + verticalOffset) + 'px')
                       .style('right', (rightOffset !== undefined ? rightOffset : 8) + 'px');
                 break;
             case 'top-left':
-                button.style('top', (topOffset !== undefined ? topOffset : 8) + 'px')
+                button.style('top', ((topOffset !== undefined ? topOffset : 8) + verticalOffset) + 'px')
                       .style('left', (leftOffset !== undefined ? leftOffset : 8) + 'px');
                 break;
             case 'bottom-right':
-                button.style('bottom', (bottomOffset !== undefined ? bottomOffset : 8) + 'px')
+                button.style('bottom', ((bottomOffset !== undefined ? bottomOffset : 8) + verticalOffset) + 'px')
                       .style('right', (rightOffset !== undefined ? rightOffset : 8) + 'px');
                 break;
             default: // 'bottom-left'
-                button.style('bottom', (bottomOffset !== undefined ? bottomOffset : 8) + 'px')
+                button.style('bottom', ((bottomOffset !== undefined ? bottomOffset : 8) + verticalOffset) + 'px')
                       .style('left', (leftOffset !== undefined ? leftOffset : 8) + 'px');
         }
 
@@ -55,13 +65,13 @@
             .style('display', 'none')
             .html(content);
 
-        // Position de la box juste sous le bouton
+        // Position de la box juste sous le bouton avec ajustement du décalage
         if(position.startsWith('top')) {
-            box.style('top', (topOffset !== undefined ? topOffset + 28 : 36) + 'px')
+            box.style('top', ((topOffset !== undefined ? topOffset : 8) + verticalOffset + 28) + 'px')
                .style('left', button.style('left') || 'auto')
                .style('right', button.style('right') || 'auto');
         } else { // bottom
-            box.style('bottom', (bottomOffset !== undefined ? bottomOffset + 28 : 36) + 'px')
+            box.style('bottom', ((bottomOffset !== undefined ? bottomOffset : 8) + verticalOffset + 28) + 'px')
                .style('left', button.style('left') || 'auto')
                .style('right', button.style('right') || 'auto');
         }
