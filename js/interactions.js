@@ -137,8 +137,11 @@ function selectableFactors() {
 }
 
 function categoryFactors() {
+  // Liste des clés autorisées pour le diagramme en barres
+  const allowedKeys = ["suicidal_thoughts", "family_history", "degree"];
+  
   return Object.values(SCHEMA)
-    .filter(m => m.type === "category")
+    .filter(m => m.type === "category" && allowedKeys.includes(m.key))
     .map(m => ({ key: m.key, label: m.label }));
 }
 
@@ -554,7 +557,7 @@ function drawLegend(svg, colorScale, width, height, margin) {
     .style("font-size", "11px")
     .style("fill", "#64748b")
     .style("font-weight", "500")
-    .text("Faible risque");
+    .text("Haut risque");
 
   legendGroup.append("text")
     .attr("x", legendWidth)
@@ -563,7 +566,7 @@ function drawLegend(svg, colorScale, width, height, margin) {
     .style("font-size", "11px")
     .style("fill", "#64748b")
     .style("font-weight", "500")
-    .text("Haut risque");
+    .text("Faible risque");
 
   [0, 0.25, 0.5, 0.75, 1].forEach(offset => {
     const xPos = offset * legendWidth;

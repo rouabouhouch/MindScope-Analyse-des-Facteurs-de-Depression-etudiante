@@ -6008,7 +6008,6 @@ id,Gender,Age,City,Profession,Academic Pressure,Work Pressure,CGPA,Study Satisfa
 30218,Male,18.0,Visakhapatnam,Student,3.0,0.0,9.1,4.0,0.0,'7-8 hours',Healthy,,Yes,11.0,5.0,No,1
 30222,Male,34.0,Hyderabad,Student,4.0,0.0,7.04,5.0,0.0,'More than 8 hours',Unhealthy,Bachelor of Hotel Management,No,4.0,5.0,No,0
 30227,Male,32.0,Nashik,Student,3.0,0.0,9.72,1.0,0.0,'7-8 hours',Moderate,Bachelor of Laws,Yes,12.0,3.0,Yes,1
-30231,Female,29.0,'Less Delhi',Student,2.0,0.0,7.04,3.0,0.0,'7-8 hours',Healthy,Bachelor of Engineering,No,7.0,1.0,No,0
 30232,Male,24.0,Rajkot,Student,3.0,0.0,5.86,3.0,0.0,'5-6 hours',Unhealthy,Bachelor of Architecture,Yes,7.0,5.0,No,1
 30234,Female,27.0,Bangalore,Student,4.0,0.0,9.91,4.0,0.0,'5-6 hours',Healthy,Master of Science,Yes,12.0,5.0,Yes,1
 30238,Female,20.0,Rajkot,Student,3.0,0.0,8.03,3.0,0.0,'Less than 5 hours',Healthy,,Yes,2.0,3.0,Yes,1
@@ -7019,7 +7018,6 @@ id,Gender,Age,City,Profession,Academic Pressure,Work Pressure,CGPA,Study Satisfa
 35295,Female,28.0,Mumbai,Student,2.0,0.0,9.88,5.0,0.0,'Less than 5 hours',Healthy,Other / Not Specified,No,5.0,1.0,Yes,0
 35303,Male,30.0,Varanasi,Student,1.0,0.0,6.37,3.0,0.0,'5-6 hours',Healthy,Master of Commerce,No,0.0,2.0,No,0
 35307,Female,18.0,Vasai-Virar,Student,3.0,0.0,8.91,2.0,0.0,'5-6 hours',Healthy,,No,7.0,1.0,Yes,0
-35309,Female,21.0,3.0,Student,3.0,0.0,8.69,4.0,0.0,'7-8 hours',Unhealthy,Bachelor of Computer Applications,Yes,11.0,5.0,No,1
 35315,Female,34.0,Agra,Student,4.0,0.0,7.72,4.0,0.0,'Less than 5 hours',Unhealthy,Master of Business Administration,Yes,9.0,1.0,No,0
 35320,Male,26.0,Ludhiana,Student,3.0,0.0,5.24,4.0,0.0,'Less than 5 hours',Healthy,Bachelor of Laws,Yes,7.0,4.0,Yes,1
 35328,Female,31.0,Nagpur,Student,5.0,0.0,8.88,5.0,0.0,'5-6 hours',Unhealthy,Master of Technology,Yes,8.0,5.0,No,1
@@ -7353,7 +7351,6 @@ id,Gender,Age,City,Profession,Academic Pressure,Work Pressure,CGPA,Study Satisfa
 36973,Female,20.0,Lucknow,Student,3.0,0.0,7.0,4.0,0.0,'Less than 5 hours',Moderate,,Yes,11.0,5.0,No,1
 36978,Male,24.0,Patna,Student,1.0,0.0,5.74,1.0,0.0,'Less than 5 hours',Moderate,Bachelor of Education,No,12.0,5.0,Yes,0
 36987,Female,29.0,Vasai-Virar,Student,5.0,0.0,9.02,2.0,0.0,'More than 8 hours',Unhealthy,Master of Technology,Yes,11.0,5.0,Yes,1
-36993,Male,31.0,'Less than 5 Kalyan',Student,1.0,0.0,7.21,1.0,0.0,'5-6 hours',Healthy,Master of Education,No,2.0,1.0,No,0
 37001,Male,27.0,Faridabad,Student,4.0,0.0,8.46,4.0,0.0,'More than 8 hours',Unhealthy,Master of Pharmacy,Yes,8.0,1.0,Yes,1
 37003,Female,31.0,Vasai-Virar,Student,5.0,0.0,8.07,5.0,0.0,'7-8 hours',Healthy,Master of Pharmacy,Yes,4.0,5.0,No,1
 37005,Male,25.0,Agra,Student,1.0,0.0,5.38,2.0,0.0,'5-6 hours',Unhealthy,Bachelor of Business Administration,Yes,9.0,3.0,No,1
@@ -24004,7 +24001,6 @@ id,Gender,Age,City,Profession,Academic Pressure,Work Pressure,CGPA,Study Satisfa
 120900,Male,33.0,Ghaziabad,Student,5.0,0.0,7.77,3.0,0.0,'5-6 hours',Moderate,Bachelor of Arts,Yes,8.0,5.0,No,1
 120902,Male,24.0,Nagpur,Student,5.0,0.0,9.02,2.0,0.0,'7-8 hours',Unhealthy,Bachelor of Technology,Yes,8.0,3.0,Yes,1
 120907,Female,19.0,Pune,Student,3.0,0.0,8.63,1.0,0.0,'Less than 5 hours',Healthy,,Yes,5.0,3.0,Yes,1
-120908,Female,29.0,City,Student,3.0,0.0,8.58,1.0,0.0,'Less than 5 hours',Healthy,Master of Laws,No,6.0,2.0,Yes,0
 120911,Male,21.0,Vasai-Virar,Student,5.0,0.0,7.09,2.0,0.0,'7-8 hours',Healthy,,Yes,12.0,4.0,Yes,1
 120917,Female,18.0,Indore,Student,3.0,0.0,6.41,4.0,0.0,'Less than 5 hours',Moderate,,Yes,9.0,4.0,Yes,1
 120925,Female,33.0,Indore,Student,4.0,0.0,7.72,3.0,0.0,'Less than 5 hours',Healthy,Master of Hotel Management,Yes,6.0,3.0,No,0
